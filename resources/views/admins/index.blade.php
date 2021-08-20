@@ -13,19 +13,22 @@
         </thead>
         <tbody>
         @foreach($users as $user)
+            @if($user->id !== Auth::user()->id)
             <tr>
                 <th>{{ $user->id }}</th>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->role }}</td>
-                <td class="pt-2">
-                    <div class="row d-flex flex-row justify-content-center">
+                <td class="pt-3">
+                    <div class="row d-flex flex-row">
                         <a href="/admins/{{ $user->id }}" class="btn btn-primary mr-2">View</a>
-                        <a href="/admins/{{ $user->id }}/edit" class="btn btn-success mr-2">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        @if($user->role !== "ADMIN")
+                            <a href="#" class="btn btn-danger">Delete</a>
+                        @endif
                     </div>
                 </td>
             </tr>
+            @endif
         @endforeach
         </tbody>
     </table>

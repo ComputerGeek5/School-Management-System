@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +40,16 @@ class AdminsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = new User();
+
+        $user->name = $request->input("name");
+        $user->role = $request->input("role");
+        $user->email = $request->input("email");
+        $user->password = Hash::make($request->input("password"));
+
+        $user->save();
+
+        return redirect("/admins")->with("success", "User Created");
     }
 
     /**

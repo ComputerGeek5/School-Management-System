@@ -24,6 +24,7 @@
         @include("inc.navbar")
         <main class="py-4">
             <div class="container pt-3">
+                @include("inc.messages")
                 @yield('content')
             </div>
         </main>
