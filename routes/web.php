@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagesController;
-use \App\Http\Controllers\StudentsController;
+use App\Http\Controllers\AdminsController;
+use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\TeachersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +18,9 @@ use \App\Http\Controllers\StudentsController;
 |
 */
 
-//Route::get('/home', [HomeController::class, 'index'])->name('home');
 Auth::routes();
-Route::get('/', [PagesController::class, "home"])->name("index");
-Route::get('/home', [PagesController::class, "home"])->name("home");
+Route::get('/', [PagesController::class, "index"])->name("index");
+Route::resource("/admins",AdminsController::class);
 Route::resource("/students",StudentsController::class);
+Route::resource("/teachers",TeachersController::class);
+

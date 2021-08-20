@@ -10,12 +10,15 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/students">Students</a>
-                </li>
-{{--                <li class="nav-item">--}}
-{{--                    <a class="nav-link" href="/courses">Courses</a>--}}
-{{--                </li>--}}
+                @if(!Auth::guest())
+                    @if(Auth::user()->role === "ADMIN")
+                        @include("inc.admins")
+                    @elseif(Auth::user()->role === "Student")
+                        @include("inc.students")
+                    @elseif(Auth::user()->role === "Teacher")
+                        @include("inc.teachers")
+                    @endif
+                @endif
                 <li class="nav-item">
                     <a class="nav-link" href="/about">About</a>
                 </li>

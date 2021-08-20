@@ -13,12 +13,13 @@ class PagesController extends Controller
 
     public function index()
     {
-        return view("pages.index");
-    }
-
-    public function home()
-    {
-        return view("pages.home");
+        if(auth()->user()->role === "ADMIN") {
+            return redirect()->route("admins.index");
+        } elseif(auth()->user()->role === "Student") {
+            return redirect()->route("students.index");
+        } else {
+            return redirect()->route("teachers.index");
+        }
     }
 
     public function about() {
