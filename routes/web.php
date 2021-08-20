@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PagesController;
 use App\Http\Controllers\AdminsController;
+use App\Http\Controllers\PagesController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\TeachersController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +19,8 @@ use App\Http\Controllers\TeachersController;
 
 Auth::routes();
 Route::get('/', [PagesController::class, "index"])->name("index");
-Route::resource("/admins",AdminsController::class);
-Route::resource("/students",StudentsController::class);
-Route::resource("/teachers",TeachersController::class);
+Route::get('/about', [PagesController::class, "about"])->name("about");
+Route::resource("/admins", AdminsController::class);
+Route::resource("/students", StudentsController::class);
+Route::resource("/teachers", TeachersController::class);
 
