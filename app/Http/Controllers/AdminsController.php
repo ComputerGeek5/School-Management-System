@@ -77,6 +77,11 @@ class AdminsController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
+
+        if($user->id !== auth()->user()->id) {
+            return redirect("/admins")->with("error", "You cannot edit other users's profiles");
+        }
+
         return view("admins.edit")->with("user", $user);
     }
 
@@ -95,6 +100,10 @@ class AdminsController extends Controller
 
         $user = User::find($id);
 
+        if($user->id !== auth()->user()->id) {
+            return redirect("/admins")->with("error", "You cannot edit other users's profiles");
+        }
+
         $user->name = $request->input("name");
 
         $user->save();
@@ -111,6 +120,11 @@ class AdminsController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
+
+        if($user->role === "ADMIN" && $user->id !== auth()->user()->id) {
+            return redirect("/admins")->with("error", "You cannot delete ADMIN-s");
+        }
+
         $user->delete();
 
         return redirect("/admins")->with("success", "User Deleted");
