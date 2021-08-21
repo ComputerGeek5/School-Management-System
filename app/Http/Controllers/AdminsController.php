@@ -9,11 +9,6 @@ use App\Rules\Role;
 
 class AdminsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -115,6 +110,9 @@ class AdminsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+
+        return redirect("/admins")->with("success", "User Deleted");
     }
 }

@@ -23,7 +23,10 @@
                         <div class="row d-flex flex-row">
                             <a href="/admins/{{ $user->id }}" class="btn btn-primary mr-2">View</a>
                             @if($user->role !== "ADMIN")
-                                <a href="#" class="btn btn-danger">Delete</a>
+                                {!! Form::open(["action" => ["App\Http\Controllers\AdminsController@destroy", $user->id], "method" => "POST", "enctype" => "multipart/form-data"]) !!}
+                                {{ Form::hidden("_method", "DELETE") }}
+                                {{ Form::submit("Delete", ["class" => "btn btn-danger"]) }}
+                                {!! Form::close() !!}
                             @endif
                         </div>
                     </td>

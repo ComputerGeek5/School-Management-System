@@ -18,9 +18,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Auth::routes();
-Route::get('/', [PagesController::class, "index"])->name("index");
 Route::get('/about', [PagesController::class, "about"])->name("about");
-Route::resource("/admins", AdminsController::class);
-Route::resource("/students", StudentsController::class);
-Route::resource("/teachers", TeachersController::class);
+
+Route::middleware(["auth"])->group(function() {
+    Route::get('/', [PagesController::class, "index"])->name("index");
+    Route::resource("/admins", AdminsController::class);
+    Route::resource("/students", StudentsController::class);
+    Route::resource("/teachers", TeachersController::class);
+});
 
