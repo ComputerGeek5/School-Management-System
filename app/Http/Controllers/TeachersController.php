@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\Type;
 use Illuminate\Http\Request;
+use App\Models\Course;
 
 class TeachersController extends Controller
 {
@@ -13,7 +15,7 @@ class TeachersController extends Controller
      */
     public function index()
     {
-        return view("teachers.index");
+        return view("teachers.index")->with("courses", Course::all());
     }
 
     /**
@@ -34,7 +36,22 @@ class TeachersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "code" => "required|max:6",
+            "name" => "required",
+            "ects" => "required",
+            "type" => ["required", new Type]
+        ]);
+
+        $course = new Course;
+        $course->teacher_id = auth()->user()->id;
+        $course->code = $request->input("code");
+        $course->name = $request->input("name");
+        $course->ects = $request->input("ects");
+        $course->type = $request->input("type");
+        $course->save();
+
+        return redirect("/teachers")->with("success", "Course Added");
     }
 
     /**
