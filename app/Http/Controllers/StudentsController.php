@@ -81,4 +81,8 @@ class StudentsController extends Controller
     {
         //
     }
+
+    public function enroll() {
+        return view("students.enroll");
+    }
 }

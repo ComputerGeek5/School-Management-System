@@ -22,8 +22,11 @@ Route::get('/about', [PagesController::class, "about"])->name("about");
 
 Route::middleware(["auth"])->group(function() {
     Route::get('/', [PagesController::class, "index"])->name("index");
-    Route::resource("/users", UsersController::class);
-    Route::resource("/students", StudentsController::class);
-    Route::resource("/teachers", TeachersController::class);
+    Route::get("/students/enroll", [StudentsController::class, "enroll"])->name("students.enroll");
+    Route::resources([
+        "users" => UsersController::class,
+        "students" => StudentsController::class,
+        "teachers" => TeachersController::class
+    ]);
 });
 
