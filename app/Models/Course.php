@@ -14,4 +14,8 @@ class Course extends Model
 
     // Timestamps
     protected $primaryKey = "id";
+
+    public function teacher() {
+        return $this->belongsTo(Teacher::class);
+    }
 }

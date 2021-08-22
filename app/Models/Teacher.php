@@ -14,7 +14,8 @@ class Teacher extends Model
 
     // Timestamps
     protected $primaryKey = "id";
-    protected $casts = [
-        'course_ids' => 'array'
-    ];
+
+    public function courses() {
+        return $this->hasMany(Course::class, "teacher_id");
+    }
 }
