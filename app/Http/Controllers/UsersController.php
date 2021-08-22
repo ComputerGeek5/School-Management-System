@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Rules\Role;
 
-class AdminsController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        return view("admins.index")->with("users", User::all());
+        return view("users.index")->with("users", User::all());
     }
 
     /**
@@ -26,7 +26,7 @@ class AdminsController extends Controller
      */
     public function create()
     {
-        return view("admins.create");
+        return view("users.create");
     }
 
     /**
@@ -53,7 +53,7 @@ class AdminsController extends Controller
 
         $user->save();
 
-        return redirect("/admins")->with("success", "User Created");
+        return redirect("/users")->with("success", "User Created");
     }
 
     /**
@@ -65,7 +65,7 @@ class AdminsController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        return view("admins.show")->with("user", $user);
+        return view("users.show")->with("user", $user);
     }
 
     /**
@@ -79,10 +79,10 @@ class AdminsController extends Controller
         $user = User::find($id);
 
         if($user->id !== auth()->user()->id) {
-            return redirect("/admins")->with("error", "You cannot edit other users's profiles");
+            return redirect("/users")->with("error", "You cannot edit other users's profiles");
         }
 
-        return view("admins.edit")->with("user", $user);
+        return view("users.edit")->with("user", $user);
     }
 
     /**
@@ -101,14 +101,14 @@ class AdminsController extends Controller
         $user = User::find($id);
 
         if($user->id !== auth()->user()->id) {
-            return redirect("/admins")->with("error", "You cannot edit other users's profiles");
+            return redirect("/users")->with("error", "You cannot edit other users's profiles");
         }
 
         $user->name = $request->input("name");
 
         $user->save();
 
-        return redirect("/admins")->with("success", "Profile Updated");
+        return redirect("/users")->with("success", "Profile Updated");
     }
 
     /**
@@ -122,11 +122,11 @@ class AdminsController extends Controller
         $user = User::find($id);
 
         if($user->role === "ADMIN" && $user->id !== auth()->user()->id) {
-            return redirect("/admins")->with("error", "You cannot delete ADMIN-s");
+            return redirect("/users")->with("error", "You cannot delete ADMIN-s");
         }
 
         $user->delete();
 
-        return redirect("/admins")->with("success", "User Deleted");
+        return redirect("/users")->with("success", "User Deleted");
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminsController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\TeachersController;
@@ -22,7 +22,7 @@ Route::get('/about', [PagesController::class, "about"])->name("about");
 
 Route::middleware(["auth"])->group(function() {
     Route::get('/', [PagesController::class, "index"])->name("index");
-    Route::resource("/admins", AdminsController::class);
+    Route::resource("/users", UsersController::class);
     Route::resource("/students", StudentsController::class);
     Route::resource("/teachers", TeachersController::class);
 });

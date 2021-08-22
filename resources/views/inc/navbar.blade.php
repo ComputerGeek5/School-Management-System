@@ -13,10 +13,10 @@
             <ul class="navbar-nav mr-auto">
                 @if(!Auth::guest())
                     <li class="nav-item">
-                        <a class="nav-link" href="/admins/{{ Auth::user()->id }}">Your Profile</a>
+                        <a class="nav-link" href="/users/{{ Auth::user()->id }}">Your Profile</a>
                     </li>
                     @if(Auth::user()->role === "ADMIN")
-                        @include("inc.admins")
+                        @include("inc.users")
                     @elseif(Auth::user()->role === "Student")
                         @include("inc.students")
                     @elseif(Auth::user()->role === "Teacher")
