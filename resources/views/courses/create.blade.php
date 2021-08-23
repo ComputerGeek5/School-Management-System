@@ -3,7 +3,7 @@
 @section("content")
     <h1 class="mb-5">Add Course</h1>
 
-    {!! Form::open(["action" => "App\Http\Controllers\TeachersController@store", "method" => "POST", "enctype" => "multipart/form-data"]) !!}
+    {!! Form::open(["action" => "App\Http\Controllers\CoursesController@store", "method" => "POST", "enctype" => "multipart/form-data"]) !!}
         <div class="form-group">
             {{ Form::label("code", "Code") }}
             {{ Form::text("code", "", ["class" => "form-control", "placeholder" => "Code"]) }}
