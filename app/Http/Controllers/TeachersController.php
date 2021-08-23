@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\Type;
-use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Teacher;
 use App\Models\Course;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class TeachersController extends Controller
 {
@@ -15,7 +17,7 @@ class TeachersController extends Controller
      */
     public function index()
     {
-        return view("teachers.index")->with("courses", Course::all());
+        return view("teachers.index");
     }
 
     /**
@@ -37,21 +39,24 @@ class TeachersController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "code" => "required|max:6",
             "name" => "required",
-            "ects" => "required",
-            "type" => ["required", new Type]
+            "email" => "required|unique:users,email",
+            "password" => "required|min:8"
         ]);
 
-        $course = new Course;
-        $course->teacher_id = auth()->user()->id;
-        $course->code = $request->input("code");
-        $course->name = $request->input("name");
-        $course->ects = $request->input("ects");
-        $course->type = $request->input("type");
-        $course->save();
+        $user = new User();
+        $user->name = $request->input("name");
+        $user->role = "Teacher";
+        $user->email = $request->input("email");
+        $user->password = Hash::make($request->input("password"));
+        $user->save();
 
-        return redirect("/teachers")->with("success", "Course Added");
+        $teacher = new Teacher();
+        $teacher->id = $user->id;
+        $teacher->name = $request->input("name");
+        $teacher->save();
+
+        return redirect("/admins")->with("success", "Teacher Created");
     }
 
     /**
@@ -62,7 +67,13 @@ class TeachersController extends Controller
      */
     public function show($id)
     {
-        //
+        $teacher = Teacher::find($id);
+
+        if(auth()->user()->role !== "ADMIN" && $teacher->id !== auth()->user()->id) {
+            return redirect("/")->with("error", "You cannot view other users's profiles");
+        }
+
+        return view("teachers.show")->with("teacher", $teacher);
     }
 
     /**
@@ -73,7 +84,13 @@ class TeachersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $teacher = Teacher::find($id);
+
+        if($teacher->id !== auth()->user()->id) {
+            return redirect("/")->with("error", "You cannot edit other users's profiles");
+        }
+
+        return view("teachers.edit")->with("teacher", $teacher);
     }
 
     /**
@@ -85,7 +102,24 @@ class TeachersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            "name" => "required",
+        ]);
+
+        $user = User::find($id);
+
+        if($user->id !== auth()->user()->id) {
+            return redirect("/")->with("error", "You cannot edit other users's profiles");
+        }
+
+        $user->name = $request->input("name");
+        $user->save();
+
+        $teacher = Teacher::find($id);
+        $teacher->name = $request->input("name");
+        $teacher->save();
+
+        return redirect("/teachers/$id")->with("success", "Profile Updated");
     }
 
     /**
@@ -96,6 +130,21 @@ class TeachersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+
+        if(auth()->user()->role !== "ADMIN") {
+            return redirect("/")->with("error", "You cannot delete other users's accounts");
+        }
+
+        $user->delete();
+
+        $teacher = Teacher::find($id);
+        $teacher->delete();
+
+        if(auth()->user()->id !== $teacher->id) {
+            return redirect("/admins")->with("success", "Teacher Deleted");
+        }
+
+        return redirect("/login")->with("success", "Account Deleted");
     }
 }

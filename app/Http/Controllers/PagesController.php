@@ -11,7 +11,7 @@ class PagesController extends Controller
         } elseif (auth()->user()->role === "Student") {
             return redirect()->route("students.index");
         } else {
-            return redirect()->route("courses.index");
+            return redirect()->route("teachers.index");
         }
     }
 

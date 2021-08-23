@@ -67,6 +67,11 @@ class AdminsController extends Controller
     public function show($id)
     {
         $admin = Admin::find($id);
+
+        if(auth()->user()->role !== "ADMIN") {
+            return redirect("/")->with("error", "You cannot view other users's profiles");
+        }
+
         return view("admins.show")->with("admin", $admin);
     }
 
@@ -81,7 +86,7 @@ class AdminsController extends Controller
         $admin = Admin::find($id);
 
         if($admin->id !== auth()->user()->id) {
-            return redirect("/admins")->with("error", "You cannot edit other users's profiles");
+            return redirect("/")->with("error", "You cannot edit other users's profiles");
         }
 
         return view("admins.edit")->with("admin", $admin);
@@ -103,7 +108,7 @@ class AdminsController extends Controller
         $user = User::find($id);
 
         if($user->id !== auth()->user()->id) {
-            return redirect("/admins")->with("error", "You cannot edit other users's profiles");
+            return redirect("/")->with("error", "You cannot edit other users's profiles");
         }
 
         $user->name = $request->input("name");
@@ -126,8 +131,10 @@ class AdminsController extends Controller
     {
         $user = User::find($id);
 
-        if($user->id !== auth()->user()->id) {
-            return redirect("/admins")->with("error", "You cannot delete other ADMIN-s");
+        if(auth()->user()->role === "ADMIN" && $user->role === "ADMIN" && $user->id !== auth()->user()->id) {
+            return redirect("/admins")->with("error", "You cannot delete other admins");
+        } elseif(auth()->user()->role !== "ADMIN") {
+            return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
 
         $user->delete();

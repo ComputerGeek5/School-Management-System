@@ -1,6 +1,6 @@
 <li class="nav-item">
-    <a class="nav-link" href="/students/{{ Auth::user()->id }}">Your Profile</a>
+    <a class="nav-link" href="/teachers/{{ Auth::user()->id }}">Your Profile</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="/teachers/create">Add New Course</a>
+    <a class="nav-link" href="/teachers/courses/create">Add New Course</a>
 </li>
