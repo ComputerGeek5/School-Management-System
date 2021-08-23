@@ -51,6 +51,7 @@ class AdminsController extends Controller
         $user->save();
 
         $admin = new Admin();
+        $admin->id = $user->id;
         $admin->name = $request->input("name");
         $admin->save();
 
@@ -65,8 +66,8 @@ class AdminsController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
-        return view("users.show")->with("user", $user);
+        $admin = Admin::find($id);
+        return view("admins.show")->with("admin", $admin);
     }
 
     /**
@@ -77,13 +78,13 @@ class AdminsController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
+        $admin = Admin::find($id);
 
-        if($user->id !== auth()->user()->id) {
-            return redirect("/users")->with("error", "You cannot edit other users's profiles");
+        if($admin->id !== auth()->user()->id) {
+            return redirect("/admins")->with("error", "You cannot edit other users's profiles");
         }
 
-        return view("users.edit")->with("user", $user);
+        return view("admins.edit")->with("admin", $admin);
     }
 
     /**
@@ -102,14 +103,17 @@ class AdminsController extends Controller
         $user = User::find($id);
 
         if($user->id !== auth()->user()->id) {
-            return redirect("/users")->with("error", "You cannot edit other users's profiles");
+            return redirect("/admins")->with("error", "You cannot edit other users's profiles");
         }
 
         $user->name = $request->input("name");
-
         $user->save();
 
-        return redirect("/users")->with("success", "Profile Updated");
+        $admin = Admin::find($id);
+        $admin->name = $request->input("name");
+        $admin->save();
+
+        return redirect("/admins/$id")->with("success", "Profile Updated");
     }
 
     /**
@@ -122,12 +126,15 @@ class AdminsController extends Controller
     {
         $user = User::find($id);
 
-        if($user->role === "ADMIN" && $user->id !== auth()->user()->id) {
-            return redirect("/users")->with("error", "You cannot delete ADMIN-s");
+        if($user->id !== auth()->user()->id) {
+            return redirect("/admins")->with("error", "You cannot delete other ADMIN-s");
         }
 
         $user->delete();
 
-        return redirect("/users")->with("success", "User Deleted");
+        $admin = Admin::find($id);
+        $admin->delete();
+
+        return redirect("/login")->with("success", "Account Deleted");
     }
 }
