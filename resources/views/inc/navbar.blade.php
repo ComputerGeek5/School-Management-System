@@ -12,11 +12,8 @@
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 @if(!Auth::guest())
-                    <li class="nav-item">
-                        <a class="nav-link" href="/users/{{ Auth::user()->id }}">Your Profile</a>
-                    </li>
                     @if(Auth::user()->role === "ADMIN")
-                        @include("inc.users")
+                        @include("inc.admins")
                     @elseif(Auth::user()->role === "Student")
                         @include("inc.students")
                     @elseif(Auth::user()->role === "Teacher")

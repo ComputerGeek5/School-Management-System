@@ -1,16 +1,12 @@
 @extends("layouts.app")
 
 @section("content")
-    <h1 class="mb-5">Add User</h1>
+    <h1 class="mb-5">Add Admin</h1>
 
-    {!! Form::open(["action" => "App\Http\Controllers\UsersController@store", "method" => "POST", "enctype" => "multipart/form-data"]) !!}
+    {!! Form::open(["action" => "App\Http\Controllers\AdminsController@store", "method" => "POST", "enctype" => "multipart/form-data"]) !!}
     <div class="form-group">
         {{ Form::label("name", "Name") }}
         {{ Form::text("name", "", ["class" => "form-control", "placeholder" => "Name"]) }}
-    </div>
-    <div class="form-group">
-        {{ Form::label("role", "Role") }}
-        {{ Form::text("role", "", ["class" => "form-control", "placeholder" => "ADMIN/Student/Teacher"]) }}
     </div>
     <div class="form-group">
         {{ Form::label("email", "Email") }}

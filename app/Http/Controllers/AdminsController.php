@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Rules\Role;
 
-class UsersController extends Controller
+class AdminsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return view("users.index")->with("users", User::all());
+        return view("admins.index")->with("users", User::all());
     }
 
     /**
@@ -26,7 +26,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view("users.create");
+        return view("admins.create");
     }
 
     /**
@@ -39,21 +39,22 @@ class UsersController extends Controller
     {
         $request->validate([
             "name" => "required",
-            "role" => ["required", new Role],
             "email" => "required|unique:users,email",
             "password" => "required|min:8"
         ]);
 
         $user = new User();
-
         $user->name = $request->input("name");
-        $user->role = $request->input("role");
+        $user->role = "ADMIN";
         $user->email = $request->input("email");
         $user->password = Hash::make($request->input("password"));
-
         $user->save();
 
-        return redirect("/users")->with("success", "User Created");
+        $admin = new Admin();
+        $admin->name = $request->input("name");
+        $admin->save();
+
+        return redirect("/admins")->with("success", "Admin Created");
     }
 
     /**
