@@ -16,6 +16,6 @@ class Teacher extends Model
     protected $primaryKey = "id";
 
     public function courses() {
-        return $this->hasMany(Course::class, "teacher_id");
+        return $this->hasMany("App\Models\Course"/*, "teacher_id", "id"*/);
     }
 }

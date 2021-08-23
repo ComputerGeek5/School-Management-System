@@ -55,6 +55,7 @@ class AdminsController extends Controller
         $admin->name = $request->input("name");
         $admin->save();
 
+//        return redirect("/login")->with("success", "Admin Created");
         return redirect("/admins")->with("success", "Admin Created");
     }
 

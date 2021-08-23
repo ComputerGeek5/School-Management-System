@@ -17,7 +17,6 @@ class CoursesController extends Controller
     public function index()
     {
         $courses = Course::all()->where("teacher_id", "=", auth()->user()->id);
-//        dd($courses);
         return view("courses.index")->with("courses", $courses);
     }
 
@@ -28,6 +27,10 @@ class CoursesController extends Controller
      */
     public function create()
     {
+        if(auth()->user()->role !== "Teacher") {
+            return view("/")->with("error", "Only teachers can create courses");
+        }
+
         return view("courses.create");
     }
 
@@ -69,7 +72,13 @@ class CoursesController extends Controller
      */
     public function show($id)
     {
-        //
+        $course = Course::find($id);
+
+        if(auth()->user()->role === "ADMIN") {
+            return redirect("/admins")->with("error", "Only teachers and students can view courses");
+        }
+
+        return view("courses.show")->with("course", $course);
     }
 
     /**
@@ -80,7 +89,15 @@ class CoursesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $course = Course::find($id);
+
+        if(auth()->user()->role !== "Teacher") {
+            return redirect("/")->with("error", "Only teachers can edit courses");
+        } elseif(auth()->user()->id !== $course->teacher_id) {
+            return redirect("/teachers")->with("error", "You cannot edit other teachers's courses");
+        }
+
+        return view("courses.edit")->with("course", $course);
     }
 
     /**
@@ -92,7 +109,27 @@ class CoursesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            "code" => "required|max:6",
+            "name" => "required",
+            "ects" => "required",
+            "type" => ["required", new Type()]
+        ]);
+
+        if(auth()->user()->role !== "Teacher") {
+            return view("/")->with("error", "Only teachers can edit courses");
+        } elseif(auth()->user()->id !== $course->teacher_id) {
+            return redirect("/teachers")->with("error", "You cannot edit other teachers's courses");
+        }
+
+        $course = Course::find($id);
+        $course->code = $request->input("code");
+        $course->name = $request->input("name");
+        $course->ects = $request->input("ects");
+        $course->type = $request->input("type");
+        $course->save();
+
+        return redirect("/teachers/courses")->with("success", "Course Updated");
     }
 
     /**
@@ -103,6 +140,16 @@ class CoursesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $course = Course::find($id);
+
+        if(auth()->user()->role !== "Teacher") {
+            return view("/")->with("error", "Only teachers can delete courses");
+        } elseif(auth()->user()->id !== $course->teacher_id) {
+            return redirect("/teachers")->with("error", "You cannot delete other teachers's courses");
+        }
+
+        $course->delete();
+
+        return redirect("/teachers/courses")->with("success", "Course Deleted");
     }
 }
