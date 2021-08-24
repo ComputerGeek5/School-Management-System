@@ -116,13 +116,14 @@ class CoursesController extends Controller
             "type" => ["required", new Type()]
         ]);
 
+        $course = Course::find($id);
+
         if(auth()->user()->role !== "Teacher") {
             return view("/")->with("error", "Only teachers can edit courses");
         } elseif(auth()->user()->id !== $course->teacher_id) {
             return redirect("/teachers")->with("error", "You cannot edit other teachers's courses");
         }
 
-        $course = Course::find($id);
         $course->code = $request->input("code");
         $course->name = $request->input("name");
         $course->ects = $request->input("ects");

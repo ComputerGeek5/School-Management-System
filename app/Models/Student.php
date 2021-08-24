@@ -14,4 +14,8 @@ class Student extends Model
 
     // Timestamps
     protected $primaryKey = "id";
+
+    protected $casts = [
+        'courses' => 'array'
+    ];
 }

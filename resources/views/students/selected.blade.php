@@ -1,7 +1,7 @@
 @extends("layouts.app")
 
 @section("content")
-    <h1 class="mb-5">Your Courses</h1>
+    <h1>Selected Courses</h1>
     <table class="table">
         <thead>
         <tr>
@@ -24,11 +24,7 @@
                 <td class="pt-2">
                     <div class="row d-flex flex-row">
                         <a href="/teachers/courses/{{ $course->id }}" class="btn btn-primary mr-2">View</a>
-                        <a href="/teachers/courses/{{ $course->id }}/edit" class="btn btn-success mr-2">Edit</a>
-                        {!! Form::open(["action" => ["App\Http\Controllers\CoursesController@destroy", $course->id], "method" => "POST", "enctype" => "multipart/form-data"]) !!}
-                            {{ Form::hidden("_method", "DELETE") }}
-                            {{ Form::submit("Delete", ["class" => "btn btn-danger"]) }}
-                        {!! Form::close() !!}
+                        <a href="/students/unenroll/{{ $course->id }}" class="btn btn-danger">Unenroll</a>
                     </div>
                 </td>
             </tr>

@@ -149,7 +149,41 @@ class StudentsController extends Controller
         return redirect("/login")->with("success", "Account Deleted");
     }
 
-    public function enroll() {
-        return view("students.enroll");
+    public function selected() {
+        $student = Student::find(auth()->user()->id);
+        $courses_ids = array_reverse($student->courses);
+        $courses = array();
+
+        foreach($courses_ids as $course_id) {
+            $courses[] = Course::find($course_id);
+        }
+
+        return view("students.selected")->with("courses", $courses);
+    }
+
+    public function take() {
+        $courses = Course::all();
+        return view("students.take")->with("courses", $courses);
+    }
+
+    public function enroll($id) {
+        $student = Student::find(auth()->user()->id);
+        $courses = $student->courses;
+        $courses[] = $id;
+        $student->courses = $courses;
+        $student->save();
+
+        return redirect("/students/selected")->with("success", "Course Selected");
+    }
+
+    public function unenroll($id) {
+        $student = Student::find(auth()->user()->id);
+        $courses = $student->courses;
+        $id = array_search($id, $courses);
+        unset($courses[$id]);
+        $student->courses = $courses;
+        $student->save();
+
+        return redirect("/students/selected")->with("success", "Course Unselected");
     }
 }

@@ -23,7 +23,12 @@ Route::get('/about', [PagesController::class, "about"])->name("about");
 
 Route::middleware(["auth"])->group(function() {
     Route::get('/', [PagesController::class, "index"])->name("index");
-    Route::get("/students/enroll", [StudentsController::class, "enroll"])->name("students.enroll");
+    Route::prefix("/students")->group(function() {
+        Route::get("/take", [StudentsController::class, "take"])->name("students.take");
+        Route::get("/selected", [StudentsController::class, "selected"])->name("students.selected");
+        Route::get("/enroll/{course}", [StudentsController::class, "enroll"])->name("students.enroll");
+        Route::get("/unenroll/{course}", [StudentsController::class, "unenroll"])->name("students.unenroll");
+    });
     Route::get("/create", [PagesController::class, "create"])->name("create");
     Route::prefix("/teachers")->group(function() {
         Route::resource("/courses", CoursesController::class);
