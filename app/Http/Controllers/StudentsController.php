@@ -167,8 +167,19 @@ class StudentsController extends Controller
     }
 
     public function enroll($id) {
+//        try {
+//            Course::findOrFail($id);
+//        } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+//            return redirect("/students/selected")->with("error", "Course does not exist");
+//        }
+
         $student = Student::find(auth()->user()->id);
         $courses = $student->courses;
+
+        if(in_array($id, $courses)) {
+            return redirect("/students/selected")->with("error", "You are already enrolled in that course");
+        }
+
         $courses[] = $id;
         $student->courses = $courses;
         $student->save();
@@ -177,9 +188,19 @@ class StudentsController extends Controller
     }
 
     public function unenroll($id) {
+//        try {
+//            Course::findOrFail($id);
+//        } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+//            return redirect("/students/selected")->with("error", "Course does not exist");
+//        }
+
         $student = Student::find(auth()->user()->id);
         $courses = $student->courses;
-        $id = array_search($id, $courses);
+
+        if(!in_array($id, $courses)) {
+            return redirect("/students/selected")->with("error", "You are not enrolled in that course");
+        }
+
         unset($courses[$id]);
         $student->courses = $courses;
         $student->save();
