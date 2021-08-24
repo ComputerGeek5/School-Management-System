@@ -5,7 +5,6 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col"></th>
         </tr>
@@ -13,7 +12,6 @@
         <tbody>
         @foreach($students as $student)
             <tr>
-                <th>{{ $student->id }}</th>
                 <td>{{ $student->name }}</td>
                 <td class="pt-2">
                     <div class="row d-flex flex-row">

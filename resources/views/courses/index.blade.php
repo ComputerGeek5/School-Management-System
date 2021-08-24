@@ -5,7 +5,6 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">Code</th>
             <th scope="col">Name</th>
             <th scope="col">Teacher</th>
@@ -16,7 +15,6 @@
         <tbody>
         @foreach($courses as $course)
             <tr>
-                <th>{{ $course->id }}</th>
                 <td>{{ $course->code }}</td>
                 <td>{{ $course->name }}</td>
                 <td>{{ /*\App\Models\Teacher::find(auth()->user()->id)->name*/ $course->teacher->name }}</td>

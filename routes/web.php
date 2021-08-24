@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Auth::routes();
+Auth::routes(['register' => false]);
 Route::get('/about', [PagesController::class, "about"])->name("about");
 Route::middleware(["auth"])->group(function() {
     Route::get('/', [PagesController::class, "index"])->name("index");

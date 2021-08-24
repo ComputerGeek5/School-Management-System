@@ -16,7 +16,7 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy("created_at", "DESC")->get();
+        $users = User::where("id", "!=", auth()->user()->id)->orderBy("created_at", "DESC")->get();
         return view("admins.index")->with("users", $users);
     }
 
