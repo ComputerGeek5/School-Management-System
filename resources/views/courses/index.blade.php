@@ -18,7 +18,7 @@
                 <th>{{ $course->id }}</th>
                 <td>{{ $course->code }}</td>
                 <td>{{ $course->name }}</td>
-                <td>{{ $course->teacher()->name }}</td>
+                <td>{{ \App\Models\Teacher::find(auth()->user()->id)->name }}</td>
                 <td>{{ $course->type }}</td>
                 <td class="pt-2">
                     <div class="row d-flex flex-row">

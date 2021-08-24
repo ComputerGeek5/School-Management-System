@@ -16,6 +16,6 @@ class Course extends Model
     protected $primaryKey = "id";
 
     public function teacher() {
-        return $this->belongsTo("App\Models\Teacher"/*, "teacher_id", "id"*/);
+        return $this->belongsTo(Teacher::class/*, "teacher_id", "id"*/);
     }
 }
