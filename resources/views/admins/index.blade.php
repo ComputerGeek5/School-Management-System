@@ -1,6 +1,7 @@
 @extends("layouts.app")
 
 @section("content")
+    <h1 class="mb-5">Users</h1>
     <table class="table">
         <thead>
         <tr>

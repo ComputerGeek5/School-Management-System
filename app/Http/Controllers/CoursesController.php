@@ -16,7 +16,7 @@ class CoursesController extends Controller
      */
     public function index()
     {
-        $courses = Course::all()->where("teacher_id", "=", auth()->user()->id);
+        $courses = Course::where("teacher_id", "=", auth()->user()->id)->orderBy("created_at", "DESC")->get();
         return view("courses.index")->with("courses", $courses);
     }
 

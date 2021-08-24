@@ -16,7 +16,8 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        return view("admins.index")->with("users", User::all());
+        $users = User::orderBy("created_at", "DESC")->get();
+        return view("admins.index")->with("users", $users);
     }
 
     /**

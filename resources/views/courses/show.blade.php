@@ -6,7 +6,7 @@
             <div class="col-md-4">
                 <h4>Code: <em>{{ $course->code }}</em></h4>
                 <h4>Name: <em>{{ $course->name }}</em></h4>
-                <h4>Teacher: <em>{{ \App\Models\Teacher::find(auth()->user()->id)->name }}</em></h4>
+                <h4>Teacher: <em>{{ /*\App\Models\Teacher::find(auth()->user()->id)->name*/ $course->teacher->name }}</em></h4>
                 <h4>ECTS: <em>{{ $course->ects }}</em></h4>
                 <div class="row d-flex flex-row">
                     @if($course->teacher_id === Auth::user()->id)

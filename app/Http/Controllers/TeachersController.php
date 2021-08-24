@@ -17,7 +17,8 @@ class TeachersController extends Controller
      */
     public function index()
     {
-        return view("teachers.index");
+        $teachers = Teacher::where("id", "!=", auth()->user()->id)->orderBy("name", "ASC")->get();
+        return view("teachers.index")->with("teachers", $teachers);
     }
 
     /**
@@ -69,8 +70,8 @@ class TeachersController extends Controller
     {
         $teacher = Teacher::find($id);
 
-        if(auth()->user()->role !== "ADMIN" && $teacher->id !== auth()->user()->id) {
-            return redirect("/")->with("error", "You cannot view other users's profiles");
+        if(auth()->user()->role === "Student") {
+            return redirect("/")->with("error", "You cannot view other teachers's profiles");
         }
 
         return view("teachers.show")->with("teacher", $teacher);
