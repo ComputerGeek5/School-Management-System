@@ -5,6 +5,8 @@ use App\Http\Controllers\AdminsController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\CoursesController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,7 +22,6 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 Route::get('/about', [PagesController::class, "about"])->name("about");
-
 Route::middleware(["auth"])->group(function() {
     Route::get('/', [PagesController::class, "index"])->name("index");
     Route::prefix("/students")->group(function() {

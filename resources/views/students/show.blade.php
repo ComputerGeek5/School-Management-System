@@ -13,8 +13,8 @@
                     @endif
                     @if($student->id === Auth::user()->id || Auth::user()->role === "ADMIN")
                         {!! Form::open(["action" => ["App\Http\Controllers\StudentsController@destroy", $student->id], "method" => "POST", "enctype" => "multipart/form-data", "class" => "w-100 mt-2"]) !!}
-                        {{ Form::hidden("_method", "DELETE") }}
-                        {{ Form::submit("Delete", ["class" => "btn btn-block btn-danger"]) }}
+                            {{ Form::hidden("_method", "DELETE") }}
+                            {{ Form::submit("Delete", ["class" => "btn btn-block btn-danger"]) }}
                         {!! Form::close() !!}
                         @endif
                 </div>

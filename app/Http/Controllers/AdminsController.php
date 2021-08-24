@@ -139,10 +139,11 @@ class AdminsController extends Controller
             return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
 
-        $user->delete();
-
         $admin = Admin::find($id);
         $admin->delete();
+
+        auth()->logout();
+        $user->delete();
 
         return redirect("/login")->with("success", "Account Deleted");
     }

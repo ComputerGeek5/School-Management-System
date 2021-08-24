@@ -133,18 +133,20 @@ class StudentsController extends Controller
     {
         $user = User::find($id);
 
-        if(auth()->user()->role !== "ADMIN") {
+        if(auth()->user()->role === "Teacher") {
             return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
-
-        $user->delete();
 
         $student = Student::find($id);
         $student->delete();
 
         if(auth()->user()->id !== $student->id) {
+            $user->delete();
             return redirect("/admins")->with("success", "Student Deleted");
         }
+
+        auth()->logout();
+        $user->delete();
 
         return redirect("/login")->with("success", "Account Deleted");
     }
