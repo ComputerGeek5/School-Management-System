@@ -1,7 +1,7 @@
 @extends("layouts.app")
 
 @section("content")
-    <h1>Take Courses</h1>
+    <h1 class="mb-5">Take Courses</h1>
     <table class="table">
         <thead>
         <tr>
@@ -24,7 +24,9 @@
                 <td class="pt-2">
                     <div class="row d-flex flex-row">
                         <a href="/teachers/courses/{{ $course->id }}" class="btn btn-primary mr-2">View</a>
-                        <a href="/students/enroll/{{ $course->id }}" class="btn btn-success">Enroll</a>
+                        @if(!in_array($course->id, $courses_ids))
+                            <a href="/students/enroll/{{ $course->id }}" class="btn btn-success">Enroll</a>
+                        @endif
                     </div>
                 </td>
             </tr>

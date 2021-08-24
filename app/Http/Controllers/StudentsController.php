@@ -163,7 +163,13 @@ class StudentsController extends Controller
 
     public function take() {
         $courses = Course::all();
-        return view("students.take")->with("courses", $courses);
+        $student = Student::find(auth()->user()->id);
+        $courses_ids = $student->courses;
+
+        return view("students.take", [
+            "courses" => $courses,
+            "courses_ids" => $courses_ids
+        ]);
     }
 
     public function enroll($id) {
@@ -201,10 +207,12 @@ class StudentsController extends Controller
             return redirect("/students/selected")->with("error", "You are not enrolled in that course");
         }
 
+        $id = array_search($id, $courses);
+
         unset($courses[$id]);
         $student->courses = $courses;
         $student->save();
 
-        return redirect("/students/selected")->with("success", "Course Unselected");
+        return redirect("/students/take")->with("success", "Course Unselected");
     }
 }
