@@ -4,16 +4,15 @@
     <h1 class="mb-5">Users</h1>
     <table class="table">
         <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Role</th>
-            <th scope="col"></th>
-        </tr>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col"></th>
+            </tr>
         </thead>
         <tbody>
         @foreach($users as $user)
-            @if($user->id !== Auth::user()->id)
                 <tr>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
@@ -38,7 +37,6 @@
                         </div>
                     </td>
                 </tr>
-            @endif
         @endforeach
         </tbody>
     </table>

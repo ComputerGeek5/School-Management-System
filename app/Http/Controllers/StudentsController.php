@@ -42,19 +42,23 @@ class StudentsController extends Controller
         $request->validate([
             "name" => "required",
             "email" => "required|unique:users,email",
-            "password" => "required|min:8"
+            "program" => "required",
+            "graduation_year" => "max:4"
         ]);
 
         $user = new User();
         $user->name = $request->input("name");
         $user->role = "Student";
         $user->email = $request->input("email");
-        $user->password = Hash::make($request->input("password"));
+        $user->password = Hash::make("12345678");
         $user->save();
 
         $student = new Student();
         $student->id = $user->id;
+        $student->email = $request->input("email");
         $student->name = $request->input("name");
+        $student->graduation_year = $request->input("graduation_year");
+        $student->program = $request->input("program");
         $student->save();
 
         return redirect("/admins")->with("success", "Student Created");
@@ -105,6 +109,9 @@ class StudentsController extends Controller
     {
         $request->validate([
             "name" => "required",
+            "password" => "required|min:8",
+            "program" => "required",
+            "graduation_year" => "max:4"
         ]);
 
         $user = User::find($id);
@@ -114,10 +121,13 @@ class StudentsController extends Controller
         }
 
         $user->name = $request->input("name");
+        $user->password = Hash::make($request->input("password"));
         $user->save();
 
         $student = Student::find($id);
         $student->name = $request->input("name");
+        $student->graduation_year = $request->input("graduation_year");
+        $student->program = $request->input("program");
         $student->save();
 
         return redirect("/students/$id")->with("success", "Profile Updated");

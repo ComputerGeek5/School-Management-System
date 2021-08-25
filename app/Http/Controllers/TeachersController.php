@@ -138,9 +138,16 @@ class TeachersController extends Controller
         }
 
         $teacher = Teacher::find($id);
+
+        $courses = $teacher->courses;
+        foreach($courses as $course) {
+            $course->delete();
+        }
+
         $teacher->delete();
 
         if(auth()->user()->id !== $teacher->id) {
+            $user->delete();
             return redirect("/admins")->with("success", "Teacher Deleted");
         }
 
