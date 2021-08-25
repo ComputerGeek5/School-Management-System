@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class StudentsController extends Controller
 {
@@ -46,7 +47,8 @@ class StudentsController extends Controller
             "name" => "required",
             "email" => "required|unique:users,email",
             "graduation_year" => "required",
-            "program" => "required"
+            "program" => "required",
+            "image" => "image|nullable|max:1999",
         ]);
 
         $user = new User();
@@ -56,12 +58,29 @@ class StudentsController extends Controller
         $user->password = Hash::make($default_user_password);
         $user->save();
 
+        // Handle image upload
+        if($request->hasFile("image")) {
+            // Get full name
+            $fileNameWithExt = $request->file("image")->getClientOriginalName();
+            // Get only name
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            // Get extension
+            $extension = $request->file("image")->getClientOriginalExtension();
+            // File name to store
+            $fileNameToStore = $fileName."_".time().".".$extension;
+            // Upload image
+            $request->file("image")->storeAs("public/images", $fileNameToStore);
+        } else {
+            $fileNameToStore = "noimage.png";
+        }
+
         $student = new Student();
         $student->id = $user->id;
         $student->email = $request->input("email");
         $student->name = $request->input("name");
         $student->graduation_year = $request->input("graduation_year");
         $student->program = $request->input("program");
+        $student->image = $fileNameToStore;
         $student->save();
 
         return redirect("/admins")->with("success", "Student Created");
@@ -115,6 +134,7 @@ class StudentsController extends Controller
             "program" => "required",
             "graduation_year" => "required",
             "about" => "required",
+            "image" => "image|nullable|max:1999",
         ]);
 
         $user = User::find($id);
@@ -129,11 +149,31 @@ class StudentsController extends Controller
         }
         $user->save();
 
+        // Handle image upload
+        if($request->hasFile("image")) {
+            // Get full name
+            $fileNameWithExt = $request->file("image")->getClientOriginalName();
+            // Get only name
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            // Get extension
+            $extension = $request->file("image")->getClientOriginalExtension();
+            // File name to store
+            $fileNameToStore = $fileName."_".time().".".$extension;
+            // Upload image
+            $request->file("image")->storeAs("public/images", $fileNameToStore);
+        }
+
         $student = Student::find($id);
         $student->name = $request->input("name");
         $student->about = $request->input("about");
         $student->graduation_year = $request->input("graduation_year");
         $student->program = $request->input("program");
+
+        if($request->hasFile("image")) {
+            Storage::delete("public/images/".$student->image);
+            $student->image = $fileNameToStore;
+        }
+
         $student->save();
 
         return redirect("/students/$id")->with("success", "Profile Updated");
@@ -154,6 +194,11 @@ class StudentsController extends Controller
         }
 
         $student = Student::find($id);
+
+        if($student->image !== "noimage.png") {
+            Storage::delete("public/images/".$student->image);
+        }
+
         $student->delete();
 
         if(auth()->user()->id !== $student->id) {

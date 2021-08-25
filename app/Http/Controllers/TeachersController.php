@@ -8,6 +8,7 @@ use App\Models\Teacher;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class TeachersController extends Controller
 {
@@ -48,6 +49,7 @@ class TeachersController extends Controller
             "email" => "required|unique:users,email",
             "title" => "required",
             "faculty" => "required",
+            "image" => "image|nullable|max:1999",
         ]);
 
         $user = new User();
@@ -57,12 +59,29 @@ class TeachersController extends Controller
         $user->password = Hash::make($default_user_password);
         $user->save();
 
+        // Handle image upload
+        if($request->hasFile("image")) {
+            // Get full name
+            $fileNameWithExt = $request->file("image")->getClientOriginalName();
+            // Get only name
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            // Get extension
+            $extension = $request->file("image")->getClientOriginalExtension();
+            // File name to store
+            $fileNameToStore = $fileName."_".time().".".$extension;
+            // Upload image
+            $request->file("image")->storeAs("public/images", $fileNameToStore);
+        } else {
+            $fileNameToStore = "noimage.png";
+        }
+
         $teacher = new Teacher();
         $teacher->id = $user->id;
         $teacher->name = $request->input("name");
         $teacher->email = $request->input("email");
         $teacher->title = $request->input("title");
         $teacher->faculty = $request->input("faculty");
+        $teacher->image = $fileNameToStore;
         $teacher->save();
 
         return redirect("/admins")->with("success", "Teacher Created");
@@ -116,6 +135,7 @@ class TeachersController extends Controller
             "title" => "required",
             "faculty" => "required",
             "about" => "required",
+            "image" => "image|nullable|max:1999",
         ]);
 
         $user = User::find($id);
@@ -130,11 +150,31 @@ class TeachersController extends Controller
         }
         $user->save();
 
+        // Handle image upload
+        if($request->hasFile("image")) {
+            // Get full name
+            $fileNameWithExt = $request->file("image")->getClientOriginalName();
+            // Get only name
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            // Get extension
+            $extension = $request->file("image")->getClientOriginalExtension();
+            // File name to store
+            $fileNameToStore = $fileName."_".time().".".$extension;
+            // Upload image
+            $request->file("image")->storeAs("public/images", $fileNameToStore);
+        }
+
         $teacher = Teacher::find($id);
         $teacher->name = $request->input("name");
         $teacher->title = $request->input("title");
         $teacher->faculty = $request->input("faculty");
         $teacher->about = $request->input("about");
+
+        if($request->hasFile("image")) {
+            Storage::delete("public/images/".$teacher->image);
+            $teacher->image = $fileNameToStore;
+        }
+
         $teacher->save();
 
         return redirect("/teachers/$id")->with("success", "Profile Updated");
@@ -172,6 +212,10 @@ class TeachersController extends Controller
                 }
             }
             $course->delete();
+        }
+
+        if($teacher->image !== "noimage.png") {
+            Storage::delete("public/images/".$teacher->image);
         }
 
         $teacher->delete();

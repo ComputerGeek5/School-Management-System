@@ -20,6 +20,7 @@
             <div class="col-md-8">
                 <h1>{{ $admin->name }}</h1>
                 <hr class="mb-5">
+                <h4>Email: <em>{{ $admin->email }}</em></h4>
             </div>
         </div>
     </div>

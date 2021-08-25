@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AdminsController extends Controller
 {
@@ -41,7 +42,8 @@ class AdminsController extends Controller
         $request->validate([
             "name" => "required",
             "email" => "required|unique:users,email",
-            "password" => "required|min:8"
+            "password" => "required|min:8",
+            "image" => "image|nullable|max:1999",
         ]);
 
         $user = new User();
@@ -51,9 +53,27 @@ class AdminsController extends Controller
         $user->password = Hash::make($request->input("password"));
         $user->save();
 
+        // Handle image upload
+        if($request->hasFile("image")) {
+            // Get full name
+            $fileNameWithExt = $request->file("image")->getClientOriginalName();
+            // Get only name
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            // Get extension
+            $extension = $request->file("image")->getClientOriginalExtension();
+            // File name to store
+            $fileNameToStore = $fileName."_".time().".".$extension;
+            // Upload image
+            $request->file("image")->storeAs("public/images", $fileNameToStore);
+        } else {
+            $fileNameToStore = "noimage.png";
+        }
+
         $admin = new Admin();
         $admin->id = $user->id;
         $admin->name = $request->input("name");
+        $admin->email = $request->input("email");
+        $admin->image = $fileNameToStore;
         $admin->save();
 
 //        return redirect("/login")->with("success", "Admin Created");
@@ -105,6 +125,7 @@ class AdminsController extends Controller
     {
         $request->validate([
             "name" => "required",
+            "image" => "image|nullable|max:1999",
         ]);
 
         $user = User::find($id);
@@ -116,8 +137,28 @@ class AdminsController extends Controller
         $user->name = $request->input("name");
         $user->save();
 
+        // Handle image upload
+        if($request->hasFile("image")) {
+            // Get full name
+            $fileNameWithExt = $request->file("image")->getClientOriginalName();
+            // Get only name
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            // Get extension
+            $extension = $request->file("image")->getClientOriginalExtension();
+            // File name to store
+            $fileNameToStore = $fileName."_".time().".".$extension;
+            // Upload image
+            $request->file("image")->storeAs("public/images", $fileNameToStore);
+        }
+
         $admin = Admin::find($id);
         $admin->name = $request->input("name");
+
+        if($request->hasFile("image")) {
+            Storage::delete("public/images/".$admin->image);
+            $admin->image = $fileNameToStore;
+        }
+
         $admin->save();
 
         return redirect("/admins/$id")->with("success", "Profile Updated");
@@ -140,8 +181,12 @@ class AdminsController extends Controller
         }
 
         $admin = Admin::find($id);
-        $admin->delete();
 
+        if($admin->image !== "noimage.png") {
+            Storage::delete("public/images/".$admin->image);
+        }
+
+        $admin->delete();
         auth()->logout();
         $user->delete();
 

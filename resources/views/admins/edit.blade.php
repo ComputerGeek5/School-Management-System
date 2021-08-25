@@ -8,6 +8,10 @@
             {{ Form::label("name", "Name") }}
             {{ Form::text("name", $admin->name, ["class" => "form-control", "placeholder" => "Name"]) }}
         </div>
+        <div class="form-group">
+            {{ Form::label("image", "Profile Picture") }}
+            {{ Form::file("image") }}
+        </div>
         {{ Form::hidden("_method", "PUT") }}
         {{ Form::submit('Update', ["class" => "btn btn-lg btn-success mt-3"]) }}
     {!! Form::close() !!}
