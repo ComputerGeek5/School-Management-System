@@ -13,6 +13,10 @@
         {{ Form::password("password", ["class" => "form-control", "placeholder" => "Password"]) }}
     </div>
     <div class="form-group">
+        {{ Form::label("about", "About Me") }}
+        {{ Form::textarea('about', $student->about, ["class" => "form-control", "placeholder" => "About Me"]) }}
+    </div>
+    <div class="form-group">
         {{ Form::label("graduation_year", "Graduation Year") }}
         {{ Form::selectYear('graduation_year', 2021, 2074, ["class" => "form-control", "value" => $student->graduation_year]) }}
     </div>
@@ -41,6 +45,6 @@
         }}
     </div>
     {{ Form::hidden("_method", "PUT") }}
-    {{ Form::submit('Create', ["class" => "btn btn-lg btn-success mt-3"]) }}
+    {{ Form::submit('Update', ["class" => "btn btn-lg btn-success mt-3"]) }}
     {!! Form::close() !!}
 @endsection

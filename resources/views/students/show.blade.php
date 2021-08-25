@@ -22,6 +22,15 @@
             <div class="col-md-8">
                 <h1>{{ $student->name }}</h1>
                 <hr class="mb-5">
+                <h4>Email: <em>{{ $student->name }}</em></h4>
+                <h4>Program: <em>{{ $student->program }}</em></h4>
+                <h4>Graduation Year: <em>{{ $student->graduation_year }}</em></h4>
+                <h4>About Me:</h4>
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                        <p class="lead ml-5">{{ $student->about }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

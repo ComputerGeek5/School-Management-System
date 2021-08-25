@@ -42,7 +42,6 @@ class StudentsController extends Controller
         $request->validate([
             "name" => "required",
             "email" => "required|unique:users,email",
-            "program" => "required",
             "graduation_year" => "max:4"
         ]);
 
@@ -109,7 +108,7 @@ class StudentsController extends Controller
     {
         $request->validate([
             "name" => "required",
-            "password" => "required|min:8",
+            "about" => "required",
             "program" => "required",
             "graduation_year" => "max:4"
         ]);
@@ -126,6 +125,7 @@ class StudentsController extends Controller
 
         $student = Student::find($id);
         $student->name = $request->input("name");
+        $student->about = $request->input("about");
         $student->graduation_year = $request->input("graduation_year");
         $student->program = $request->input("program");
         $student->save();
