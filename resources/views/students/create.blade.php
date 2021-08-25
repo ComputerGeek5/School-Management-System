@@ -37,7 +37,7 @@
                         "Political Science and International Relations" => "PSR",
                         "Law" => "LAW"
                     ],
-            ])
+            ], ["class" => "form-control"])
         }}
     </div>
     {{ Form::submit('Create', ["class" => "btn btn-lg btn-success mt-3"]) }}

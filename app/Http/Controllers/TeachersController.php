@@ -39,22 +39,29 @@ class TeachersController extends Controller
      */
     public function store(Request $request)
     {
+        // Default User Password
+        $default_user_password = "12345678";
+
         $request->validate([
             "name" => "required",
             "email" => "required|unique:users,email",
-            "password" => "required|min:8"
+            "title" => "required",
+            "faculty" => "required",
         ]);
 
         $user = new User();
         $user->name = $request->input("name");
         $user->role = "Teacher";
         $user->email = $request->input("email");
-        $user->password = Hash::make($request->input("password"));
+        $user->password = Hash::make($default_user_password);
         $user->save();
 
         $teacher = new Teacher();
         $teacher->id = $user->id;
         $teacher->name = $request->input("name");
+        $teacher->email = $request->input("email");
+        $teacher->title = $request->input("title");
+        $teacher->faculty = $request->input("faculty");
         $teacher->save();
 
         return redirect("/admins")->with("success", "Teacher Created");
@@ -105,6 +112,9 @@ class TeachersController extends Controller
     {
         $request->validate([
             "name" => "required",
+            "title" => "required",
+            "faculty" => "required",
+            "about" => "required",
         ]);
 
         $user = User::find($id);
@@ -114,10 +124,14 @@ class TeachersController extends Controller
         }
 
         $user->name = $request->input("name");
+        $user->password = Hash::make($request->input("password"));
         $user->save();
 
         $teacher = Teacher::find($id);
         $teacher->name = $request->input("name");
+        $teacher->title = $request->input("title");
+        $teacher->faculty = $request->input("faculty");
+        $teacher->about = $request->input("about");
         $teacher->save();
 
         return redirect("/teachers/$id")->with("success", "Profile Updated");

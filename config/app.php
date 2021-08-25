@@ -231,4 +231,6 @@ return [
 
     ],
 
+    // Default User Password
+    // "default_user_password" => "12345678",
 ];
