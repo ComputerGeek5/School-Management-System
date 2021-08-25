@@ -40,6 +40,10 @@
             ], ["class" => "form-control"])
         }}
     </div>
+    <div class="form-group">
+        {{ Form::label("image", "Profile Picture") }}
+        {{ Form::file("image") }}
+    </div>
     {{ Form::submit('Create', ["class" => "btn btn-lg btn-success mt-3"]) }}
     {!! Form::close() !!}
 @endsection
