@@ -46,7 +46,7 @@ class CoursesController extends Controller
            "code" => "required|max:6",
            "name" => "required",
            "ects" => "required",
-           "type" => ["required", new Type()]
+           "type" => "required",
         ]);
 
         if(auth()->user()->role !== "Teacher") {
@@ -113,7 +113,7 @@ class CoursesController extends Controller
             "code" => "required|max:6",
             "name" => "required",
             "ects" => "required",
-            "type" => ["required", new Type()]
+            "type" => "required",
         ]);
 
         $course = Course::find($id);

@@ -39,17 +39,21 @@ class StudentsController extends Controller
      */
     public function store(Request $request)
     {
+        // Default User Password
+        $default_user_password = "12345678";
+
         $request->validate([
             "name" => "required",
             "email" => "required|unique:users,email",
-            "graduation_year" => "max:4"
+            "graduation_year" => "required",
+            "program" => "required"
         ]);
 
         $user = new User();
         $user->name = $request->input("name");
         $user->role = "Student";
         $user->email = $request->input("email");
-        $user->password = Hash::make("12345678");
+        $user->password = Hash::make($default_user_password);
         $user->save();
 
         $student = new Student();
@@ -110,7 +114,7 @@ class StudentsController extends Controller
             "name" => "required",
             "about" => "required",
             "program" => "required",
-            "graduation_year" => "max:4"
+            "graduation_year" => "required"
         ]);
 
         $user = User::find($id);

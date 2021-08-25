@@ -16,9 +16,15 @@
             {{ Form::label("ects", "ECTS") }}
             {{ Form::number("ects", "", ["class" => "form-control", "placeholder" => "ECTS"]) }}
         </div>
-        <div class="form-group">
-            {{ Form::label("type", "Type") }}
-            {{ Form::text("type", "", ["class" => "form-control", "placeholder" => "Compulsory/Elective"]) }}
+        {{ Form::label("Type") }}
+        <div class="container">
+            <div class="form-check">
+                {{ Form::radio("type", "Compulsory", true, ["class" => "form-check-input"]) }}
+                {{ Form::label("type", "Compulsory", ["class" => "form-check-label"]) }}
+                <br>
+                {{ Form::radio("type", "Elective", false, ["class" => "form-check-input"]) }}
+                {{ Form::label("type", "Elective", ["class" => "form-check-label"]) }}
+            </div>
         </div>
         {{ Form::submit('Create', ["class" => "btn btn-lg btn-success mt-3"]) }}
     {!! Form::close() !!}

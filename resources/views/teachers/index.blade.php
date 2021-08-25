@@ -6,6 +6,9 @@
         <thead>
         <tr>
             <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Title</th>
+            <th scope="col">Faculty</th>
             <th scope="col"></th>
         </tr>
         </thead>
@@ -13,6 +16,9 @@
         @foreach($teachers as $teacher)
                 <tr>
                     <td>{{ $teacher->name }}</td>
+                    <td>{{ $teacher->email }}</td>
+                    <td>{{ $teacher->title }}</td>
+                    <td>{{ $teacher->faculty }}</td>
                     <td class="pt-2">
                         <div class="row d-flex flex-row">
                             <a href="/teachers/{{ $teacher->id }}" class="btn btn-primary mr-2">View</a>
