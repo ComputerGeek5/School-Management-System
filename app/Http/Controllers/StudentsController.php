@@ -112,9 +112,9 @@ class StudentsController extends Controller
     {
         $request->validate([
             "name" => "required",
-            "about" => "required",
             "program" => "required",
-            "graduation_year" => "required"
+            "graduation_year" => "required",
+            "about" => "required",
         ]);
 
         $user = User::find($id);
@@ -124,7 +124,9 @@ class StudentsController extends Controller
         }
 
         $user->name = $request->input("name");
-        $user->password = Hash::make($request->input("password"));
+        if(!empty($request->input("password"))) {
+            $user->password = Hash::make($request->input("password"));
+        }
         $user->save();
 
         $student = Student::find($id);
@@ -199,14 +201,14 @@ class StudentsController extends Controller
         $courses = $student->courses;
 
         if(in_array($id, $courses)) {
-            return redirect("/students/selected")->with("error", "You are already enrolled in that course");
+            return redirect("/students/take")->with("error", "You are already enrolled in that course");
         }
 
         $courses[] = $id;
         $student->courses = $courses;
         $student->save();
 
-        return redirect("/students/selected")->with("success", "Course Selected");
+        return redirect("/students/take")->with("success", "Course Selected");
     }
 
     public function unenroll($id) {
@@ -229,6 +231,6 @@ class StudentsController extends Controller
         $student->courses = $courses;
         $student->save();
 
-        return redirect("/students/take")->with("success", "Course Unselected");
+        return redirect("/students/selected")->with("success", "Course Unselected");
     }
 }

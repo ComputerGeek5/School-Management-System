@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Course;
@@ -124,7 +125,9 @@ class TeachersController extends Controller
         }
 
         $user->name = $request->input("name");
-        $user->password = Hash::make($request->input("password"));
+        if(!empty($request->input("password"))) {
+            $user->password = Hash::make($request->input("password"));
+        }
         $user->save();
 
         $teacher = Teacher::find($id);
@@ -153,8 +156,21 @@ class TeachersController extends Controller
 
         $teacher = Teacher::find($id);
 
+        // Unenroll all students from this teacher's courses
+        $students = Student::all();
         $courses = $teacher->courses;
+
         foreach($courses as $course) {
+            foreach ($students as $student) {
+                $selected = $student->courses;
+
+                if (in_array($course->id, $selected)) {
+                    $selected_id = array_search($course->id, $selected);
+                    unset($selected[$selected_id]);
+                    $student->courses = $selected;
+                    $student->save();
+                }
+            }
             $course->delete();
         }
 
