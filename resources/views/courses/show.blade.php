@@ -24,7 +24,7 @@
                 <div class="card text-white bg-primary w-100">
                     <div class="card-body">
                         <h1 class="card-title">Description</h1>
-                        <p class="card-text"></p>
+                        <p class="card-text">{{ $course->description }}</p>
                     </div>
                 </div>
             </div>

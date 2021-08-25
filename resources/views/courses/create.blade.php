@@ -26,6 +26,11 @@
                 {{ Form::label("type", "Elective", ["class" => "form-check-label"]) }}
             </div>
         </div>
+        <br>
+        <div class="form-group">
+            {{ Form::label("description", "Description") }}
+            {{ Form::textarea("description", "", ["class" => "form-control", "placeholder" => "Description"]) }}
+        </div>
         {{ Form::submit('Create', ["class" => "btn btn-lg btn-success mt-3"]) }}
     {!! Form::close() !!}
 @endsection

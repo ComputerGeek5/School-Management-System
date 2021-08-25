@@ -47,6 +47,7 @@ class CoursesController extends Controller
            "name" => "required",
            "ects" => "required",
            "type" => "required",
+            "description" => "required",
         ]);
 
         if(auth()->user()->role !== "Teacher") {
@@ -59,6 +60,7 @@ class CoursesController extends Controller
         $course->name = $request->input("name");
         $course->ects = $request->input("ects");
         $course->type = $request->input("type");
+        $course->description = $request->input("description");
         $course->save();
 
         return redirect("/teachers/courses")->with("success", "Course Created");
@@ -114,6 +116,7 @@ class CoursesController extends Controller
             "name" => "required",
             "ects" => "required",
             "type" => "required",
+            "description" => "required",
         ]);
 
         $course = Course::find($id);
@@ -128,6 +131,7 @@ class CoursesController extends Controller
         $course->name = $request->input("name");
         $course->ects = $request->input("ects");
         $course->type = $request->input("type");
+        $course->description = $request->input("description");
         $course->save();
 
         return redirect("/teachers/courses")->with("success", "Course Updated");

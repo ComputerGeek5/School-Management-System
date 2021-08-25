@@ -20,6 +20,10 @@
         {{ Form::label("type", "Type") }}
         {{ Form::text("type", $course->type, ["class" => "form-control", "placeholder" => "Compulsory/Elective"]) }}
     </div>
+    <div class="form-group">
+        {{ Form::label("description", "Description") }}
+        {{ Form::textarea("description", $course->description, ["class" => "form-control", "placeholder" => "Description"]) }}
+    </div>
     {{ Form::hidden("_method", "PUT") }}
     {{ Form::submit('Update', ["class" => "btn btn-lg btn-success mt-3"]) }}
     {!! Form::close() !!}
