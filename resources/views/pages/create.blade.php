@@ -2,9 +2,9 @@
 
 @section("content")
     <div class="row d-flex flex-row">
-        <h1>Choose one of the following roles:</h1>
-        <a href="/admins/create" class="btn btn-primary ml-5 mr-3">ADMIN</a>
-        <a href="/students/create" class="btn btn-primary mr-3">Student</a>
-        <a href="/teachers/create" class="btn btn-primary">Teacher</a>
+        <h1 class="mr-3">Choose one of the following roles:</h1>
+        <input type="button" onclick="location.href='/admins/create';" value="ADMIN" class="btn btn-primary mr-3"/>
+        <input type="button" onclick="location.href='/students/create';" value="Student" class="btn btn-primary mr-3"/>
+        <input type="button" onclick="location.href='/teachers/create';" value="Teacher" class="btn btn-primary mr-3"/>
     </div>
 @endsection
