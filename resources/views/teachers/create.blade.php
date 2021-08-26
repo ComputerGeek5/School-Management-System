@@ -28,6 +28,8 @@
                     "Faculty Of Engineering & Architecture" => "Faculty Of Engineering & Architecture",
                     "Faculty Of Economy" => "Faculty Of Economy",
                     "Faculty Of Law & Social Sciences" => "Faculty Of Law & Social Sciences",
+                    "Faculty Of History and Philology" => "Faculty Of History and Philology",
+                    "Faculty Of Foreign Languages" => "Faculty Of Foreign Languages",
                 ], ["class" => "form-control"])
             }}
         </div>

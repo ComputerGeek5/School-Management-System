@@ -23,25 +23,43 @@
         <div class="form-group">
             {{ Form::label("program", "Program") }}
             {{ Form::select("program",[
-                "Faculty Of Engineering & Architecture" => [
-                        "Computer Engineering" => "CEN",
-                        "Electronic & Communications Engineering" => "ECE",
-                        "Software Engineering" => "SEN",
-                        "Civil Engineering" => "CIN",
-                        "Architecture" => "ARCH"
-                    ],
+                 "Faculty Of Engineering & Architecture" => [
+                    "Computer Engineering" => "Computer Engineering",
+                    "Electronic & Communications Engineering" => "Electronic & Communications Engineering",
+                    "Software Engineering" => "Software Engineering",
+                    "Civil Engineering" => "Civil Engineering",
+                    "Architecture" => "Architecture",
+                ],
                 "Faculty Of Economy" => [
-                        "Economics" => "ECO",
-                        "Business Administration" => "BUA",
-                        "Business Informatics" => "BINF",
-                        "Banking & Finance" => "BAF",
-                        "International Marketing & Logistics Management" => "MAL"
-                    ],
+                    "Economics" => "Economics",
+                    "Business Administration" => "Business Administration",
+                    "Business Informatics" => "Business Informatics",
+                    "Banking & Finance" => "Banking & Finance",
+                    "International Marketing & Logistics Management" => "International Marketing & Logistics Management",
+                ],
                 "Faculty Of Law & Social Sciences" => [
-                        "Political Science and International Relations" => "PSR",
-                        "Law" => "LAW"
-                    ],
-                ], ["class" => "form-control", "value" => $student->program])
+                    "Political Science and International Relations" => "Political Science and International Relations",
+                    "Law" => "Law",
+                    "Psychology" => "Psychology",
+                    "Philosophy" => "Philosophy",
+                    "Sociology" => "Sociology",
+                ],
+                "Faculty Of Foreign Languages" => [
+                    "English Language" => "English Language",
+                    "French Language" => "French Language",
+                    "German Language" => "German Language",
+                    "Italian Language" => "Italian Language",
+                    "Turkish Language" => "Turkish Language",
+                    "Russian Language" => "Russian Language",
+                    "Spanish Language" => "Spanish Language",
+                    "Greek Language" => "Greek Language",
+                ],
+                "Faculty Of History and Philology" => [
+                    "History" => "History",
+                    "Geography" => "Geography",
+                    "Journalism" => "Journalism",
+                    "Archeology" => "Archeology",
+                ], ], ["class" => "form-control", "value" => $student->program])
             }}
         </div>
         <div class="form-group">
