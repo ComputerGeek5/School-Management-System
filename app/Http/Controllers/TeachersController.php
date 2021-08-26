@@ -19,6 +19,7 @@ class TeachersController extends Controller
      */
     public function index()
     {
+        // Get all users except the authenticated one
         $teachers = Teacher::where("id", "!=", auth()->user()->id)->orderBy("name", "ASC")->get();
         return view("teachers.index")->with("teachers", $teachers);
     }
@@ -44,6 +45,7 @@ class TeachersController extends Controller
         // Default User Password
         $default_user_password = "12345678";
 
+        // Validate Request
         $request->validate([
             "name" => "required",
             "email" => "required|unique:users,email",
@@ -52,6 +54,7 @@ class TeachersController extends Controller
             "image" => "image|nullable|max:1999",
         ]);
 
+        // Create New User
         $user = new User();
         $user->name = $request->input("name");
         $user->role = "Teacher";
@@ -75,6 +78,7 @@ class TeachersController extends Controller
             $fileNameToStore = "noimage.jpg";
         }
 
+        // Create New Teacher
         $teacher = new Teacher();
         $teacher->id = $user->id;
         $teacher->name = $request->input("name");
@@ -95,6 +99,7 @@ class TeachersController extends Controller
      */
     public function show($id)
     {
+        // Check if teacher exists
         $teacher = Teacher::findOrFail($id);
 
         if(auth()->user()->role === "Student") {
@@ -112,13 +117,8 @@ class TeachersController extends Controller
      */
     public function edit($id)
     {
+        // Check if teacher exists
         $teacher = Teacher::findOrFail($id);
-
-//        if(auth()->user()->role === "ADMIN") {
-//            return redirect("/admins")->with("error", "You cannot edit other users's profiles");
-//        } elseif(auth()->user()->role === "Student") {
-//            return redirect("/students")->with("error", "You cannot edit other users's profiles");
-//        }
 
         if(auth()->user()->id !== $teacher->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
@@ -136,6 +136,7 @@ class TeachersController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Validate Request
         $request->validate([
             "name" => "required",
             "title" => "required",
@@ -144,12 +145,14 @@ class TeachersController extends Controller
             "image" => "image|nullable|max:1999",
         ]);
 
+        // Find user
         $user = User::findOrFail($id);
 
         if($user->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
         }
 
+        // Update user
         $user->name = $request->input("name");
         if(!empty($request->input("password"))) {
             $user->password = Hash::make($request->input("password"));
@@ -170,12 +173,14 @@ class TeachersController extends Controller
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         }
 
+        // Check if teacher exists
         $teacher = Teacher::findOrFail($id);
         $teacher->name = $request->input("name");
         $teacher->title = $request->input("title");
         $teacher->faculty = $request->input("faculty");
         $teacher->about = $request->input("about");
 
+        // Update image if selected
         if($request->hasFile("image")) {
             Storage::delete("public/images/".$teacher->image);
             $teacher->image = $fileNameToStore;

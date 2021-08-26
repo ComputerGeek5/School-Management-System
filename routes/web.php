@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Auth::routes(['register' => false]);
-//Route::get('/about', [PagesController::class, "about"])->name("about");
 Route::middleware(["auth"])->group(function() {
     Route::get('/', [PagesController::class, "index"])->name("index");
     Route::prefix("/students")->group(function() {

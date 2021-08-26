@@ -17,6 +17,7 @@ class AdminsController extends Controller
      */
     public function index()
     {
+        // Get all users except the authenticated one
         $users = User::where("id", "!=", auth()->user()->id)->orderBy("created_at", "DESC")->get();
         return view("admins.index")->with("users", $users);
     }
@@ -39,6 +40,7 @@ class AdminsController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate Request
         $request->validate([
             "name" => "required",
             "email" => "required|unique:users,email",
@@ -46,6 +48,7 @@ class AdminsController extends Controller
             "image" => "image|nullable|max:1999",
         ]);
 
+        // Create New User
         $user = new User();
         $user->name = $request->input("name");
         $user->role = "ADMIN";
@@ -69,6 +72,7 @@ class AdminsController extends Controller
             $fileNameToStore = "noimage.jpg";
         }
 
+        // Create New Admin
         $admin = new Admin();
         $admin->id = $user->id;
         $admin->name = $request->input("name");
@@ -76,7 +80,6 @@ class AdminsController extends Controller
         $admin->image = $fileNameToStore;
         $admin->save();
 
-//        return redirect("/login")->with("success", "Admin Created");
         return redirect("/admins")->with("success", "Admin Created");
     }
 
@@ -88,6 +91,7 @@ class AdminsController extends Controller
      */
     public function show($id)
     {
+        // Check if admin exists
         $admin = Admin::findOrFail($id);
 
         if(auth()->user()->role !== "ADMIN") {
@@ -105,6 +109,7 @@ class AdminsController extends Controller
      */
     public function edit($id)
     {
+        // Check if admin exists
         $admin = Admin::findOrFail($id);
 
         if($admin->id !== auth()->user()->id) {
@@ -123,17 +128,20 @@ class AdminsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Validate Request
         $request->validate([
             "name" => "required",
             "image" => "image|nullable|max:1999",
         ]);
 
+        // Check if user exists
         $user = User::findOrFail($id);
 
         if($user->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
         }
 
+        // Update User
         $user->name = $request->input("name");
         $user->save();
 
@@ -151,9 +159,13 @@ class AdminsController extends Controller
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         }
 
+        // Check if admin exists
         $admin = Admin::findOrFail($id);
+
+        // Update admin
         $admin->name = $request->input("name");
 
+        // Update image if image selected
         if($request->hasFile("image")) {
             Storage::delete("public/images/".$admin->image);
             $admin->image = $fileNameToStore;
@@ -172,6 +184,7 @@ class AdminsController extends Controller
      */
     public function destroy($id)
     {
+        // Check if user exists
         $user = User::findOrFail($id);
 
         if(auth()->user()->role === "ADMIN" && $user->role === "ADMIN" && $user->id !== auth()->user()->id) {
@@ -180,12 +193,15 @@ class AdminsController extends Controller
             return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
 
+        // Check if admin exists
         $admin = Admin::findOrFail($id);
 
+        // Delete admin's image if default not selected
         if($admin->image !== "noimage.jpg") {
             Storage::delete("public/images/".$admin->image);
         }
 
+        // Log out and delete account
         $admin->delete();
         auth()->logout();
         $user->delete();

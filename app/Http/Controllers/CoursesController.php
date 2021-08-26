@@ -16,6 +16,7 @@ class CoursesController extends Controller
      */
     public function index()
     {
+        // Get all courses of the current teacher
         $courses = Course::where("teacher_id", "=", auth()->user()->id)->orderBy("created_at", "DESC")->get();
         return view("courses.index")->with("courses", $courses);
     }
@@ -42,6 +43,7 @@ class CoursesController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate Request
         $request->validate([
            "code" => "required|max:6",
            "name" => "required",
@@ -54,6 +56,7 @@ class CoursesController extends Controller
             return view("/")->with("error", "Only teachers can create courses");
         }
 
+        // Create New Course
         $course = new Course();
         $course->teacher_id = auth()->user()->id;
         $course->code = $request->input("code");
@@ -74,6 +77,7 @@ class CoursesController extends Controller
      */
     public function show($id)
     {
+        // Check if course exists
         $course = Course::findOrFail($id);
 
         if(auth()->user()->role === "ADMIN") {
@@ -91,6 +95,7 @@ class CoursesController extends Controller
      */
     public function edit($id)
     {
+        // Check if course exists
         $course = Course::findOrFail($id);
 
         if(auth()->user()->role !== "Teacher") {
@@ -111,6 +116,7 @@ class CoursesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Validate Request
         $request->validate([
             "code" => "required|max:6",
             "name" => "required",
@@ -119,6 +125,7 @@ class CoursesController extends Controller
             "description" => "required",
         ]);
 
+        // Check if course exists
         $course = Course::findOrFail($id);
 
         if(auth()->user()->role !== "Teacher") {
@@ -127,6 +134,7 @@ class CoursesController extends Controller
             return redirect("/teachers")->with("error", "You cannot edit other teachers's courses");
         }
 
+        // Update course
         $course->code = $request->input("code");
         $course->name = $request->input("name");
         $course->ects = $request->input("ects");
@@ -145,6 +153,7 @@ class CoursesController extends Controller
      */
     public function destroy($id)
     {
+        // Check if course exists
         $course = Course::findOrFail($id);
 
         if(auth()->user()->role !== "Teacher") {
@@ -153,6 +162,7 @@ class CoursesController extends Controller
             return redirect("/teachers")->with("error", "You cannot delete other teachers's courses");
         }
 
+        // Delete course
         $course->delete();
 
         return redirect("/teachers/courses")->with("success", "Course Deleted");

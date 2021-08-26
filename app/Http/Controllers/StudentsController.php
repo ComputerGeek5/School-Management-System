@@ -18,6 +18,7 @@ class StudentsController extends Controller
      */
     public function index()
     {
+        // Get all users except the authenticated one
         $students = Student::where("id", "!=", auth()->user()->id)->orderBy("name", "ASC")->get();
         return view("students.index")->with("students", $students);
     }
@@ -43,6 +44,7 @@ class StudentsController extends Controller
         // Default User Password
         $default_user_password = "12345678";
 
+        //  Validate Request
         $request->validate([
             "name" => "required",
             "email" => "required|unique:users,email",
@@ -51,6 +53,7 @@ class StudentsController extends Controller
             "image" => "image|nullable|max:1999",
         ]);
 
+        // Create new user
         $user = new User();
         $user->name = $request->input("name");
         $user->role = "Student";
@@ -74,6 +77,7 @@ class StudentsController extends Controller
             $fileNameToStore = "noimage.jpg";
         }
 
+        // Create new student
         $student = new Student();
         $student->id = $user->id;
         $student->email = $request->input("email");
@@ -94,6 +98,7 @@ class StudentsController extends Controller
      */
     public function show($id)
     {
+        // Check if student exists
         $student = Student::findOrFail($id);
 
         if(auth()->user()->role === "Teacher") {
@@ -111,6 +116,7 @@ class StudentsController extends Controller
      */
     public function edit($id)
     {
+        // Check if student exists
         $student = Student::findOrFail($id);
 
         if($student->id !== auth()->user()->id) {
@@ -129,6 +135,7 @@ class StudentsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Validate Request
         $request->validate([
             "name" => "required",
             "program" => "required",
@@ -137,13 +144,17 @@ class StudentsController extends Controller
             "image" => "image|nullable|max:1999",
         ]);
 
+        // Check if user exists
         $user = User::findOrFail($id);
 
         if($user->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
         }
 
+        // Update User
         $user->name = $request->input("name");
+
+        // Update password if not empty
         if(!empty($request->input("password"))) {
             $user->password = Hash::make($request->input("password"));
         }
@@ -163,12 +174,16 @@ class StudentsController extends Controller
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         }
 
+        // Check if student exists
         $student = Student::findOrFail($id);
+
+        // Update student
         $student->name = $request->input("name");
         $student->about = $request->input("about");
         $student->graduation_year = $request->input("graduation_year");
         $student->program = $request->input("program");
 
+        // Update image if selected
         if($request->hasFile("image")) {
             Storage::delete("public/images/".$student->image);
             $student->image = $fileNameToStore;
@@ -187,18 +202,22 @@ class StudentsController extends Controller
      */
     public function destroy($id)
     {
+        // Check if user exists
         $user = User::findOrFail($id);
 
         if(auth()->user()->role === "Teacher") {
             return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
 
+        // Check if student exists
         $student = Student::findOrFail($id);
 
+        // Delete image if not default
         if($student->image !== "noimage.jpg") {
             Storage::delete("public/images/".$student->image);
         }
 
+        // Log out and delete account
         $student->delete();
 
         if(auth()->user()->id !== $student->id) {
@@ -213,10 +232,12 @@ class StudentsController extends Controller
     }
 
     public function selected() {
+        // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);
         $courses_ids = array_reverse($student->courses);
         $courses = array();
 
+        // Display selected courses
         foreach($courses_ids as $course_id) {
             $courses[] = Course::findOrFail($course_id);
         }
@@ -225,7 +246,10 @@ class StudentsController extends Controller
     }
 
     public function take() {
+        // Get all courses
         $courses = Course::all();
+
+        // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);
         $courses_ids = $student->courses;
 
@@ -236,10 +260,14 @@ class StudentsController extends Controller
     }
 
     public function enroll($id) {
-        $course = Course::findOrFaiL($id);
+        // Check if course exists
+        Course::findOrFaiL($id);
+
+        // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);
         $courses = $student->courses;
 
+        // Add course id to selected courses
         if(in_array($id, $courses)) {
             return redirect("/students/take")->with("error", "You are already enrolled in that course");
         }
@@ -252,10 +280,14 @@ class StudentsController extends Controller
     }
 
     public function unenroll($id) {
+        // Check if course exists
         $course = Course::findOrFaiL($id);
+
+        // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);
         $courses = $student->courses;
 
+        // Remove course id from selected courses
         if(!in_array($id, $courses)) {
             return redirect("/students/selected")->with("error", "You are not enrolled in that course");
         }
