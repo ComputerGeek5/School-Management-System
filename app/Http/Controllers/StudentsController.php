@@ -71,7 +71,7 @@ class StudentsController extends Controller
             // Upload image
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         } else {
-            $fileNameToStore = "noimage.png";
+            $fileNameToStore = "noimage.jpg";
         }
 
         $student = new Student();
@@ -195,7 +195,7 @@ class StudentsController extends Controller
 
         $student = Student::find($id);
 
-        if($student->image !== "noimage.png") {
+        if($student->image !== "noimage.jpg") {
             Storage::delete("public/images/".$student->image);
         }
 

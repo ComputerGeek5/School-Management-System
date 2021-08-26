@@ -66,7 +66,7 @@ class AdminsController extends Controller
             // Upload image
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         } else {
-            $fileNameToStore = "noimage.png";
+            $fileNameToStore = "noimage.jpg";
         }
 
         $admin = new Admin();
@@ -182,7 +182,7 @@ class AdminsController extends Controller
 
         $admin = Admin::find($id);
 
-        if($admin->image !== "noimage.png") {
+        if($admin->image !== "noimage.jpg") {
             Storage::delete("public/images/".$admin->image);
         }
 

@@ -72,7 +72,7 @@ class TeachersController extends Controller
             // Upload image
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         } else {
-            $fileNameToStore = "noimage.png";
+            $fileNameToStore = "noimage.jpg";
         }
 
         $teacher = new Teacher();
@@ -214,7 +214,7 @@ class TeachersController extends Controller
             $course->delete();
         }
 
-        if($teacher->image !== "noimage.png") {
+        if($teacher->image !== "noimage.jpg") {
             Storage::delete("public/images/".$teacher->image);
         }
 
