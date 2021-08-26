@@ -95,10 +95,10 @@ class TeachersController extends Controller
      */
     public function show($id)
     {
-        $teacher = Teacher::find($id);
+        $teacher = Teacher::findOrFail($id);
 
         if(auth()->user()->role === "Student") {
-            return redirect("/")->with("error", "You cannot view other teachers's profiles");
+            return redirect("/")->with("error", "You cannot view teachers's profiles");
         }
 
         return view("teachers.show")->with("teacher", $teacher);
@@ -112,9 +112,15 @@ class TeachersController extends Controller
      */
     public function edit($id)
     {
-        $teacher = Teacher::find($id);
+        $teacher = Teacher::findOrFail($id);
 
-        if($teacher->id !== auth()->user()->id) {
+//        if(auth()->user()->role === "ADMIN") {
+//            return redirect("/admins")->with("error", "You cannot edit other users's profiles");
+//        } elseif(auth()->user()->role === "Student") {
+//            return redirect("/students")->with("error", "You cannot edit other users's profiles");
+//        }
+
+        if(auth()->user()->id !== $teacher->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
         }
 
@@ -138,7 +144,7 @@ class TeachersController extends Controller
             "image" => "image|nullable|max:1999",
         ]);
 
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         if($user->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
@@ -164,7 +170,7 @@ class TeachersController extends Controller
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         }
 
-        $teacher = Teacher::find($id);
+        $teacher = Teacher::findOrFail($id);
         $teacher->name = $request->input("name");
         $teacher->title = $request->input("title");
         $teacher->faculty = $request->input("faculty");
@@ -188,13 +194,13 @@ class TeachersController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         if(auth()->user()->role === "Student") {
             return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
 
-        $teacher = Teacher::find($id);
+        $teacher = Teacher::findOrFail($id);
 
         // Unenroll all students from this teacher's courses
         $students = Student::all();

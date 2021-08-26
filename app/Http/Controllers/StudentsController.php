@@ -94,10 +94,10 @@ class StudentsController extends Controller
      */
     public function show($id)
     {
-        $student = Student::find($id);
+        $student = Student::findOrFail($id);
 
         if(auth()->user()->role === "Teacher") {
-            return redirect("/")->with("error", "You cannot view other students's profiles");
+            return redirect("/")->with("error", "You cannot view students's profiles");
         }
 
         return view("students.show")->with("student", $student);
@@ -111,7 +111,7 @@ class StudentsController extends Controller
      */
     public function edit($id)
     {
-        $student = Student::find($id);
+        $student = Student::findOrFail($id);
 
         if($student->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
@@ -137,7 +137,7 @@ class StudentsController extends Controller
             "image" => "image|nullable|max:1999",
         ]);
 
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         if($user->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
@@ -163,7 +163,7 @@ class StudentsController extends Controller
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         }
 
-        $student = Student::find($id);
+        $student = Student::findOrFail($id);
         $student->name = $request->input("name");
         $student->about = $request->input("about");
         $student->graduation_year = $request->input("graduation_year");
@@ -187,13 +187,13 @@ class StudentsController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         if(auth()->user()->role === "Teacher") {
             return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
 
-        $student = Student::find($id);
+        $student = Student::findOrFail($id);
 
         if($student->image !== "noimage.jpg") {
             Storage::delete("public/images/".$student->image);
@@ -213,12 +213,12 @@ class StudentsController extends Controller
     }
 
     public function selected() {
-        $student = Student::find(auth()->user()->id);
+        $student = Student::findOrFail(auth()->user()->id);
         $courses_ids = array_reverse($student->courses);
         $courses = array();
 
         foreach($courses_ids as $course_id) {
-            $courses[] = Course::find($course_id);
+            $courses[] = Course::findOrFail($course_id);
         }
 
         return view("students.selected")->with("courses", $courses);
@@ -226,7 +226,7 @@ class StudentsController extends Controller
 
     public function take() {
         $courses = Course::all();
-        $student = Student::find(auth()->user()->id);
+        $student = Student::findOrFail(auth()->user()->id);
         $courses_ids = $student->courses;
 
         return view("students.take", [
@@ -236,13 +236,8 @@ class StudentsController extends Controller
     }
 
     public function enroll($id) {
-//        try {
-//            Course::findOrFail($id);
-//        } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-//            return redirect("/students/selected")->with("error", "Course does not exist");
-//        }
-
-        $student = Student::find(auth()->user()->id);
+        $course = Course::findOrFaiL($id);
+        $student = Student::findOrFail(auth()->user()->id);
         $courses = $student->courses;
 
         if(in_array($id, $courses)) {
@@ -257,13 +252,8 @@ class StudentsController extends Controller
     }
 
     public function unenroll($id) {
-//        try {
-//            Course::findOrFail($id);
-//        } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-//            return redirect("/students/selected")->with("error", "Course does not exist");
-//        }
-
-        $student = Student::find(auth()->user()->id);
+        $course = Course::findOrFaiL($id);
+        $student = Student::findOrFail(auth()->user()->id);
         $courses = $student->courses;
 
         if(!in_array($id, $courses)) {

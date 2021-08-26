@@ -74,7 +74,7 @@ class CoursesController extends Controller
      */
     public function show($id)
     {
-        $course = Course::find($id);
+        $course = Course::findOrFail($id);
 
         if(auth()->user()->role === "ADMIN") {
             return redirect("/admins")->with("error", "Only teachers and students can view courses");
@@ -91,7 +91,7 @@ class CoursesController extends Controller
      */
     public function edit($id)
     {
-        $course = Course::find($id);
+        $course = Course::findOrFail($id);
 
         if(auth()->user()->role !== "Teacher") {
             return redirect("/")->with("error", "Only teachers can edit courses");
@@ -119,7 +119,7 @@ class CoursesController extends Controller
             "description" => "required",
         ]);
 
-        $course = Course::find($id);
+        $course = Course::findOrFail($id);
 
         if(auth()->user()->role !== "Teacher") {
             return view("/")->with("error", "Only teachers can edit courses");
@@ -145,7 +145,7 @@ class CoursesController extends Controller
      */
     public function destroy($id)
     {
-        $course = Course::find($id);
+        $course = Course::findOrFail($id);
 
         if(auth()->user()->role !== "Teacher") {
             return view("/")->with("error", "Only teachers can delete courses");

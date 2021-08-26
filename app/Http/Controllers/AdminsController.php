@@ -88,7 +88,7 @@ class AdminsController extends Controller
      */
     public function show($id)
     {
-        $admin = Admin::find($id);
+        $admin = Admin::findOrFail($id);
 
         if(auth()->user()->role !== "ADMIN") {
             return redirect("/")->with("error", "You cannot view other users's profiles");
@@ -105,7 +105,7 @@ class AdminsController extends Controller
      */
     public function edit($id)
     {
-        $admin = Admin::find($id);
+        $admin = Admin::findOrFail($id);
 
         if($admin->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
@@ -128,7 +128,7 @@ class AdminsController extends Controller
             "image" => "image|nullable|max:1999",
         ]);
 
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         if($user->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
@@ -151,7 +151,7 @@ class AdminsController extends Controller
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         }
 
-        $admin = Admin::find($id);
+        $admin = Admin::findOrFail($id);
         $admin->name = $request->input("name");
 
         if($request->hasFile("image")) {
@@ -172,7 +172,7 @@ class AdminsController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         if(auth()->user()->role === "ADMIN" && $user->role === "ADMIN" && $user->id !== auth()->user()->id) {
             return redirect("/admins")->with("error", "You cannot delete other admins");
@@ -180,7 +180,7 @@ class AdminsController extends Controller
             return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
 
-        $admin = Admin::find($id);
+        $admin = Admin::findOrFail($id);
 
         if($admin->image !== "noimage.jpg") {
             Storage::delete("public/images/".$admin->image);
