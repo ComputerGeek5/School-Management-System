@@ -16,100 +16,100 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Admins
-        $this->extracted(
+        $this->seedUser(
             "Jack Black", "jackblack@gmail.com",
             "admin@1234", "ADMIN"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Mary Smith", "marysmith@gmail.com",
             "admin@1234", "ADMIN"
         );
 
         // Students
-        $this->extracted(
+        $this->seedUser(
             "John Green", "johngreen@gmail.com",
             "student@1234", "Student"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Jennifer Williams", "jenniferwilliams@gmail.com",
             "student@1234", "Student"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Charles Brown", "charlesbrown@gmail.com",
             "student@1234", "Student"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Elizabeth Johnson", "elizabethjohnson@gmail.com",
             "student@1234", "Student"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Douglas Jones", "douglasjones@gmail.com",
             "student@1234", "Student"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Barbara Lee", "barbaralee@gmail.com",
             "student@1234", "Student"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Thomas Moore", "thomasmoore@gmail.com",
             "student@1234", "Student"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Regina Miller", "reginamiller@gmail.com",
             "student@1234", "Student"
         );
 
         // Teachers
-        $this->extracted(
+        $this->seedUser(
             "Richard Hendrickson", "richardhendrickson@gmail.com",
             "teacher@1234", "Teacher"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Sarah Martin", "sarahmartin@gmail.com",
             "teacher@1234", "Teacher"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "William Perez", "williamperez@gmail.com",
             "teacher@1234", "Teacher"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Patricia White", "patriciawhite@gmail.com",
             "teacher@1234", "Teacher"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Daniel Robinson", "danielrobinson@gmail.com",
             "teacher@1234", "Teacher"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Nancy Allen", "nancyallen@gmail.com",
             "teacher@1234", "Teacher"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Steven Adams", "stevenadams@gmail.com",
             "teacher@1234", "Teacher"
         );
 
-        $this->extracted(
+        $this->seedUser(
             "Ashley Baker", "ashleybaker@gmail.com",
             "teacher@1234", "Teacher"
         );
     }
 
-    public function extracted($name, $email, $password, $role): void
+    public function seedUser($name, $email, $password, $role): void
     {
         DB::table('users')->insert([
             "name" => $name,

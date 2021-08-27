@@ -15,6 +15,22 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
+        $this->seedAdmin(
+            1, "Jack Black", "jackblack@gmail.com", "noimage.jpg"
+        );
 
+        $this->seedAdmin(
+            2, "Mary Smith", "marysmith@gmail.com", "noimage.jpg"
+        );
+    }
+
+    public function seedAdmin($id, $name, $email, $image): void
+    {
+        DB::table('users')->insert([
+            "id" => $id,
+            "name" => $name,
+            "email" => $email,
+            "image" => $image,
+        ]);
     }
 }
