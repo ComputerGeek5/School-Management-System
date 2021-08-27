@@ -29,10 +29,10 @@ Route::middleware(["auth"])->group(function() {
         Route::get("/enroll/{course}", [StudentsController::class, "enroll"])->name("students.enroll");
         Route::get("/unenroll/{course}", [StudentsController::class, "unenroll"])->name("students.unenroll");
     });
-    Route::get("/admins/search", [AdminsController::class, "search"]);
-    Route::get("/students/search", [StudentsController::class, "search"]);
-    Route::get("/teachers/search", [TeachersController::class, "search"]);
-    Route::get("/courses/search", [CoursesController::class, "search"]);
+    Route::get("/admins/search", [AdminsController::class, "search"])->name("admins.search");
+    Route::get("/students/search", [StudentsController::class, "search"])->name("students.search");;
+    Route::get("/teachers/search", [TeachersController::class, "search"])->name("teachers.search");;
+    Route::get("/teachers/courses/search", [CoursesController::class, "search"])->name("courses.search");;
     Route::get("/create", [PagesController::class, "create"])->name("create");
     Route::prefix("/teachers")->group(function() {
         Route::resource("/courses", CoursesController::class)

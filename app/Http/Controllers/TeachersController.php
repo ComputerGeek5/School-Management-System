@@ -14,6 +14,20 @@ use Illuminate\Support\Facades\Storage;
 
 class TeachersController extends Controller
 {
+    public function search(Request $request){
+        // Get the search value from the request
+        $search = $request->input('search');
+
+        // Search in the title and body columns from the courses table
+        $teachers = Teacher::query()
+            ->where("id", "!=", auth()->user()->id)
+            ->where('name', 'LIKE', "%{$search}%")
+            ->get();
+
+        // Return the search view with the results
+        return view('teachers.search')->with("teachers", $teachers);
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -20,18 +20,18 @@ class PagesController extends Controller
             // Check for any session errors
             if(session("error")) {
                 $error = session("error");
-                return redirect()->route("students.index")->with("error", $error);
+                return redirect()->route("students.search")->with("error", $error);
             }
 
-            return redirect()->route("students.index");
+            return redirect()->route("students.search");
         } else {
             // Check for any session errors
             if(session("error")) {
                 $error = session("error");
-                return redirect()->route("teachers.index")->with("error", $error);
+                return redirect()->route("teachers.search")->with("error", $error);
             }
 
-            return redirect()->route("teachers.index");
+            return redirect()->route("teachers.search");
         }
     }
 

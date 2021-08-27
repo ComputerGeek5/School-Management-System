@@ -13,6 +13,20 @@ use Illuminate\Support\Facades\Storage;
 
 class StudentsController extends Controller
 {
+    public function search(Request $request){
+        // Get the search value from the request
+        $search = $request->input('search');
+
+        // Search in the title and body columns from the courses table
+        $students = Student::query()
+            ->where("id", "!=", auth()->user()->id)
+            ->where('name', 'LIKE', "%{$search}%")
+            ->get();
+
+        // Return the search view with the results
+        return view('students.search')->with("students", $students);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -235,9 +249,14 @@ class StudentsController extends Controller
         return view("students.selected")->with("courses", $courses);
     }
 
-    public function take() {
-        // Get all courses
-        $courses = Course::all();
+    public function take(Request $request) {
+        // Get the search value from the request
+        $search = $request->input('search');
+
+        // Search in the title and body columns from the users table
+        $courses = Course::query()
+            ->where('name', 'LIKE', "%{$search}%")
+            ->get();
 
         // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);

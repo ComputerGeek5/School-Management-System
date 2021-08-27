@@ -1,7 +1,15 @@
 @extends("layouts.app")
 
 @section("content")
-    <h1 class="mb-5">Your Courses</h1>
+    {!! Form::open(["action" => "App\Http\Controllers\CoursesController@search", "method" => "GET"]) !!}
+    <div class="form-group">
+        {{ Form::text("search", "", ["class" => "form-control", "placeholder" => "Course"]) }}
+    </div>
+    {{ Form::submit("Search", ["class" => "btn btn-block btn-primary mb-5"]) }}
+    {!! Form::close() !!}
+
+    @if($courses->isNotEmpty())
+    <h1 class="mb-5">Courses</h1>
     <table class="table">
         <thead>
         <tr>
@@ -17,7 +25,7 @@
             <tr>
                 <td>{{ $course->code }}</td>
                 <td>{{ $course->name }}</td>
-                <td>{{ /*\App\Models\Teacher::find(auth()->user()->id)->name*/ $course->teacher->name }}</td>
+                <td>{{  $course->teacher->name }}</td>
                 <td>{{ $course->type }}</td>
                 <td class="pt-2">
                     <div class="row d-flex flex-row">
@@ -31,6 +39,9 @@
                 </td>
             </tr>
         @endforeach
-        </tbody>
-    </table>
+    @else
+        <div>
+            <h1><em>No courses found</em></h1>
+        </div>
+    @endif
 @endsection

@@ -11,6 +11,19 @@ use App\Models\Teacher;
 
 class CoursesController extends Controller
 {
+    public function search(Request $request){
+        // Get the search value from the request
+        $search = $request->input('search');
+
+        // Search in the title and body columns from the courses table
+        $courses = Course::query()
+            ->where("teacher_id", "=", auth()->user()->id)
+            ->where('name', 'LIKE', "%{$search}%")
+            ->get();
+
+        // Return the search view with the results
+        return view('courses.search')->with("courses", $courses);
+    }
     /**
      * Display a listing of the resource.
      *

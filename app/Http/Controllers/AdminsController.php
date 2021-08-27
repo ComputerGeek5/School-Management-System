@@ -12,6 +12,20 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminsController extends Controller
 {
+    public function search(Request $request){
+        // Get the search value from the request
+        $search = $request->input('search');
+
+        // Search in the title and body columns from the users table
+        $users = User::query()
+            ->where("id", "!=", auth()->user()->id)
+            ->where('name', 'LIKE', "%{$search}%")
+            ->get();
+
+        // Return the search view with the results
+        return view('admins.search')->with("users", $users);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -189,18 +203,5 @@ class AdminsController extends Controller
         $user->delete();
 
         return redirect("/login")->with("success", "Account Deleted");
-    }
-
-    public function search(Request $request){
-        // Get the search value from the request
-        $search = $request->input('search');
-
-        // Search in the title and body columns from the posts table
-        $users = User::query()
-            ->where('name', 'LIKE', "%{$search}%")
-            ->get();
-
-        // Return the search view with the results
-        return view('admins.search')->with("users", $users);
     }
 }

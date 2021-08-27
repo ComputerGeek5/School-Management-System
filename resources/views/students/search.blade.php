@@ -1,6 +1,14 @@
 @extends("layouts.app")
 
 @section("content")
+    {!! Form::open(["action" => "App\Http\Controllers\StudentsController@search", "method" => "GET"]) !!}
+    <div class="form-group">
+        {{ Form::text("search", "", ["class" => "form-control", "placeholder" => "Student"]) }}
+    </div>
+    {{ Form::submit("Search", ["class" => "btn btn-block btn-primary mb-5"]) }}
+    {!! Form::close() !!}
+
+    @if($students->isNotEmpty())
     <h1 class="mb-5">Students</h1>
     <table class="table">
         <thead>
@@ -26,6 +34,9 @@
                 </td>
             </tr>
         @endforeach
-        </tbody>
-    </table>
+    @else
+        <div>
+            <h1><em>No students found</em></h1>
+        </div>
+    @endif
 @endsection
