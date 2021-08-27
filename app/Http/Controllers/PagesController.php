@@ -12,10 +12,10 @@ class PagesController extends Controller
             // Check for any session errors
             if(session("error")) {
                 $error = session("error");
-                return redirect()->route("admins.index")->with("error", $error);
+                return redirect()->route("admins.search")->with("error", $error);
             }
 
-            return redirect()->route("admins.index");
+            return redirect()->route("admins.search");
         } elseif (auth()->user()->role === "Student") {
             // Check for any session errors
             if(session("error")) {

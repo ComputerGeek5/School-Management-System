@@ -13,19 +13,6 @@ use Illuminate\Support\Facades\Storage;
 class AdminsController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        // Get all users except the authenticated one
-        $users = User::where("id", "!=", auth()->user()->id)->orderBy(
-            "created_at", "DESC")->get();
-        return view("admins.index")->with("users", $users);
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -202,5 +189,18 @@ class AdminsController extends Controller
         $user->delete();
 
         return redirect("/login")->with("success", "Account Deleted");
+    }
+
+    public function search(Request $request){
+        // Get the search value from the request
+        $search = $request->input('search');
+
+        // Search in the title and body columns from the posts table
+        $users = User::query()
+            ->where('name', 'LIKE', "%{$search}%")
+            ->get();
+
+        // Return the search view with the results
+        return view('admins.search')->with("users", $users);
     }
 }
