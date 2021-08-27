@@ -13,6 +13,10 @@
             {{ Form::email("email", "", ["class" => "form-control", "placeholder" => "Email"]) }}
         </div>
         <div class="form-group">
+            {{ Form::label("about", "About Me") }}
+            {{ Form::textarea('about', "", ["class" => "form-control", "placeholder" => "Tell us something about yourself"]) }}
+        </div>
+        <div class="form-group">
             {{ Form::label("graduation_year", "Graduation Year") }}
             {{ Form::selectYear('graduation_year', 2021, 2074, ["class" => "form-control"]) }}
         </div>

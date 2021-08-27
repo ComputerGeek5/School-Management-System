@@ -92,6 +92,7 @@ class StudentsController extends Controller
         $student->id = $user->id;
         $student->email = $validated["email"];
         $student->name = $validated["name"];
+        $student->about = $validated["about"];
         $student->graduation_year = $validated["graduation_year"];
         $student->program = $validated["program"];
         $student->image = $fileNameToStore;

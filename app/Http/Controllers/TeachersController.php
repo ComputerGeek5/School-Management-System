@@ -93,6 +93,7 @@ class TeachersController extends Controller
         $teacher->id = $user->id;
         $teacher->name = $validated["name"];
         $teacher->email = $validated["email"];
+        $teacher->about = $validate["about"];
         $teacher->title = $validated["title"];
         $teacher->faculty = $validated["faculty"];
         $teacher->image = $fileNameToStore;

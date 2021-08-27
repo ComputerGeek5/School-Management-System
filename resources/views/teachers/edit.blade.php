@@ -14,7 +14,7 @@
         </div>
         <div class="form-group">
             {{ Form::label("about", "About Me") }}
-            {{ Form::textarea('about', $teacher->about, ["class" => "form-control", "placeholder" => "About Me"]) }}
+            {{ Form::textarea('about', $teacher->about, ["class" => "form-control", "placeholder" => "Tell us something about yourself"]) }}
         </div>
         <div class="form-group">
             {{ Form::label("title", "Title") }}

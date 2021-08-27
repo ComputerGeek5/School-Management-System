@@ -27,8 +27,8 @@ class TeacherUpdateRequest extends FormRequest
             "name" => "required",
             "title" => "required",
             "faculty" => "required",
-            "about" => "required",
             "image" => "image|nullable|max:1999",
+            "about" => "nullable"
         ];
     }
 }

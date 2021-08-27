@@ -3,7 +3,7 @@
 @section("content")
     {!! Form::open(["action" => "App\Http\Controllers\StudentsController@search", "method" => "GET"]) !!}
     <div class="form-group">
-        {{ Form::text("search", "", ["class" => "form-control", "placeholder" => "Student"]) }}
+        {{ Form::text("search", "", ["class" => "form-control text-center", "placeholder" => "Student"]) }}
     </div>
     {{ Form::submit("Search", ["class" => "btn btn-block btn-primary mb-5"]) }}
     {!! Form::close() !!}

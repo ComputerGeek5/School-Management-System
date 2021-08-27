@@ -27,8 +27,8 @@ class StudentUpdateRequest extends FormRequest
             "name" => "required",
             "program" => "required",
             "graduation_year" => "required",
-            "about" => "required",
             "image" => "image|nullable|max:1999",
+            "about" => "nullable"
         ];
     }
 }

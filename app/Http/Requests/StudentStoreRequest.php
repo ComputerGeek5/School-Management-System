@@ -29,6 +29,7 @@ class StudentStoreRequest extends FormRequest
             "graduation_year" => "required",
             "program" => "required",
             "image" => "image|nullable|max:1999",
+            "about" => "nullable"
         ];
     }
 }

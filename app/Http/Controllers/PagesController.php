@@ -34,9 +34,4 @@ class PagesController extends Controller
             return redirect()->route("teachers.search");
         }
     }
-
-    public function create() {
-
-        return view("pages.create");
-    }
 }
