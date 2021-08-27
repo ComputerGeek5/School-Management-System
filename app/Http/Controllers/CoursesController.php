@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CourseStoreRequest;
+use App\Http\Requests\CourseUpdateRequest;
 use App\Rules\Type;
 use Illuminate\Http\Request;
 use App\Models\Course;
@@ -17,7 +19,8 @@ class CoursesController extends Controller
     public function index()
     {
         // Get all courses of the current teacher
-        $courses = Course::where("teacher_id", "=", auth()->user()->id)->orderBy("created_at", "DESC")->get();
+        $courses = Course::where("teacher_id", "=", auth()->user()->id)->orderBy(
+            "created_at", "DESC")->get();
         return view("courses.index")->with("courses", $courses);
     }
 
@@ -41,16 +44,10 @@ class CoursesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CourseStoreRequest $request)
     {
         // Validate Request
-        $request->validate([
-           "code" => "required|max:6",
-           "name" => "required",
-           "ects" => "required",
-           "type" => "required",
-            "description" => "required",
-        ]);
+        $validated = $request->validated();
 
         if(auth()->user()->role !== "Teacher") {
             return view("/")->with("error", "Only teachers can create courses");
@@ -59,11 +56,11 @@ class CoursesController extends Controller
         // Create New Course
         $course = new Course();
         $course->teacher_id = auth()->user()->id;
-        $course->code = $request->input("code");
-        $course->name = $request->input("name");
-        $course->ects = $request->input("ects");
-        $course->type = $request->input("type");
-        $course->description = $request->input("description");
+        $course->code = $validated["code"];
+        $course->name = $validated["name"];
+        $course->ects = $validated["ects"];
+        $course->type = $validated["type"];
+        $course->description = $validated["description"];
         $course->save();
 
         return redirect("/teachers/courses")->with("success", "Course Created");
@@ -114,16 +111,10 @@ class CoursesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CourseUpdateRequest $request, $id)
     {
         // Validate Request
-        $request->validate([
-            "code" => "required|max:6",
-            "name" => "required",
-            "ects" => "required",
-            "type" => "required",
-            "description" => "required",
-        ]);
+        $validated = $request->validated();
 
         // Check if course exists
         $course = Course::findOrFail($id);
@@ -135,11 +126,11 @@ class CoursesController extends Controller
         }
 
         // Update course
-        $course->code = $request->input("code");
-        $course->name = $request->input("name");
-        $course->ects = $request->input("ects");
-        $course->type = $request->input("type");
-        $course->description = $request->input("description");
+        $course->code = $validated["code"];
+        $course->name = $validated["name"];
+        $course->ects = $validated["ects"];
+        $course->type = $validated["type"];
+        $course->description = $validated["description"];
         $course->save();
 
         return redirect("/teachers/courses")->with("success", "Course Updated");

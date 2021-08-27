@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentStoreRequest;
+use App\Http\Requests\StudentUpdateRequest;
 use App\Models\User;
 use App\Models\Student;
 use App\Models\Course;
@@ -39,25 +41,19 @@ class StudentsController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StudentStoreRequest $request)
     {
         // Default User Password
         $default_user_password = "12345678";
 
         //  Validate Request
-        $request->validate([
-            "name" => "required",
-            "email" => "required|unique:users,email",
-            "graduation_year" => "required",
-            "program" => "required",
-            "image" => "image|nullable|max:1999",
-        ]);
+        $validated = $request->validated();
 
         // Create new user
         $user = new User();
-        $user->name = $request->input("name");
+        $user->name = $validated["name"];
         $user->role = "Student";
-        $user->email = $request->input("email");
+        $user->email = $validated["email"];
         $user->password = Hash::make($default_user_password);
         $user->save();
 
@@ -80,10 +76,10 @@ class StudentsController extends Controller
         // Create new student
         $student = new Student();
         $student->id = $user->id;
-        $student->email = $request->input("email");
-        $student->name = $request->input("name");
-        $student->graduation_year = $request->input("graduation_year");
-        $student->program = $request->input("program");
+        $student->email = $validated["email"];
+        $student->name = $validated["name"];
+        $student->graduation_year = $validated["graduation_year"];
+        $student->program = $validated["program"];
         $student->image = $fileNameToStore;
         $student->save();
 
@@ -133,16 +129,10 @@ class StudentsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StudentUpdateRequest $request, $id)
     {
         // Validate Request
-        $request->validate([
-            "name" => "required",
-            "program" => "required",
-            "graduation_year" => "required",
-            "about" => "required",
-            "image" => "image|nullable|max:1999",
-        ]);
+        $validated = $request->validated();
 
         // Check if user exists
         $user = User::findOrFail($id);
@@ -152,7 +142,7 @@ class StudentsController extends Controller
         }
 
         // Update User
-        $user->name = $request->input("name");
+        $user->name = $validated["name"];
 
         // Update password if not empty
         if(!empty($request->input("password"))) {
@@ -178,10 +168,10 @@ class StudentsController extends Controller
         $student = Student::findOrFail($id);
 
         // Update student
-        $student->name = $request->input("name");
-        $student->about = $request->input("about");
-        $student->graduation_year = $request->input("graduation_year");
-        $student->program = $request->input("program");
+        $student->name = $validated["name"];
+        $student->about = $validated["about"];
+        $student->graduation_year = $validated["graduation_year"];
+        $student->program = $validated["program"];
 
         // Update image if selected
         if($request->hasFile("image")) {

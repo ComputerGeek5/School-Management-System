@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminStoreRequest;
+use App\Http\Requests\AdminUpdateRequest;
 use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Http\Request;
@@ -18,7 +20,8 @@ class AdminsController extends Controller
     public function index()
     {
         // Get all users except the authenticated one
-        $users = User::where("id", "!=", auth()->user()->id)->orderBy("created_at", "DESC")->get();
+        $users = User::where("id", "!=", auth()->user()->id)->orderBy(
+            "created_at", "DESC")->get();
         return view("admins.index")->with("users", $users);
     }
 
@@ -38,22 +41,17 @@ class AdminsController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AdminStoreRequest $request)
     {
         // Validate Request
-        $request->validate([
-            "name" => "required",
-            "email" => "required|unique:users,email",
-            "password" => "required|min:8",
-            "image" => "image|nullable|max:1999",
-        ]);
+        $validated = $request->validated();
 
         // Create New User
         $user = new User();
-        $user->name = $request->input("name");
+        $user->name = $validated["name"];
         $user->role = "ADMIN";
-        $user->email = $request->input("email");
-        $user->password = Hash::make($request->input("password"));
+        $user->email = $validated["email"];
+        $user->password = Hash::make($validated["password"]);
         $user->save();
 
         // Handle image upload
@@ -75,8 +73,8 @@ class AdminsController extends Controller
         // Create New Admin
         $admin = new Admin();
         $admin->id = $user->id;
-        $admin->name = $request->input("name");
-        $admin->email = $request->input("email");
+        $admin->name = $validated["name"];
+        $admin->email = $validated["email"];
         $admin->image = $fileNameToStore;
         $admin->save();
 
@@ -126,13 +124,10 @@ class AdminsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AdminUpdateRequest $request, $id)
     {
         // Validate Request
-        $request->validate([
-            "name" => "required",
-            "image" => "image|nullable|max:1999",
-        ]);
+        $validated = $request->validated();
 
         // Check if user exists
         $user = User::findOrFail($id);
@@ -142,7 +137,7 @@ class AdminsController extends Controller
         }
 
         // Update User
-        $user->name = $request->input("name");
+        $user->name = $validated["name"];
         $user->save();
 
         // Handle image upload
@@ -163,7 +158,7 @@ class AdminsController extends Controller
         $admin = Admin::findOrFail($id);
 
         // Update admin
-        $admin->name = $request->input("name");
+        $admin->name = $validated["name"];
 
         // Update image if image selected
         if($request->hasFile("image")) {
