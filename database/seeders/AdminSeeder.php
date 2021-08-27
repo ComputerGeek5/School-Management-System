@@ -26,7 +26,7 @@ class AdminSeeder extends Seeder
 
     public function seedAdmin($id, $name, $email, $image): void
     {
-        DB::table('users')->insert([
+        DB::table('admins')->insert([
             "id" => $id,
             "name" => $name,
             "email" => $email,
