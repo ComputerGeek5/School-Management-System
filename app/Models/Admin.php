@@ -7,12 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Admin extends Model
 {
-    // Table name
     public $timestamps = true;
 
-    // Primary Key
     protected $table = "admins";
 
-    // Timestamps
     protected $primaryKey = "id";
 }

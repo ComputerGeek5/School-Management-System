@@ -20,7 +20,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
     ];
 
     /**
@@ -33,6 +32,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $guarded = [
+        "role"
+    ];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -42,12 +45,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // Table name
     public $timestamps = true;
 
-    // Primary Key
     protected $table = "users";
 
-    // Timestamps
     protected $primaryKey = "id";
 }
