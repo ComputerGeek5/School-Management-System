@@ -257,7 +257,7 @@ class StudentsController extends Controller
         // Search in the title and body columns from the users table
         $courses = Course::query()
             ->where('name', 'LIKE', "%{$search}%")
-            ->get();
+            ->simplePaginate(4);
 
         // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);

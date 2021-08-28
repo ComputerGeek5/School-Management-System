@@ -25,7 +25,7 @@
             <tr>
                 <td>{{ $course->code }}</td>
                 <td>{{ $course->name }}</td>
-                <td>{{ /*\App\Models\Teacher::find(auth()->user()->id)->name*/ $course->teacher->name }}</td>
+                <td>{{ $course->teacher->name }}</td>
                 <td>{{ $course->type }}</td>
                 <td class="pt-2">
                     <div class="row d-flex flex-row">
@@ -37,9 +37,12 @@
                 </td>
             </tr>
         @endforeach
+        </tbody>
+    </table>
+    <div class="row justify-content-center">
+        {{ $courses->links() }}
+    </div>
     @else
-        <div>
-            <h1><em>No courses found</em></h1>
-        </div>
+        <h1><em>No courses found</em></h1>
     @endif
 @endsection

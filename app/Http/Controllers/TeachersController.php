@@ -93,7 +93,7 @@ class TeachersController extends Controller
         $teacher->id = $user->id;
         $teacher->name = $validated["name"];
         $teacher->email = $validated["email"];
-        $teacher->about = $validate["about"];
+        $teacher->about = $validated["about"];
         $teacher->title = $validated["title"];
         $teacher->faculty = $validated["faculty"];
         $teacher->image = $fileNameToStore;
@@ -112,10 +112,6 @@ class TeachersController extends Controller
     {
         // Check if teacher exists
         $teacher = Teacher::findOrFail($id);
-
-        if(auth()->user()->role === "Student") {
-            return redirect("/")->with("error", "You cannot view teachers's profiles");
-        }
 
         return view("teachers.show")->with("teacher", $teacher);
     }

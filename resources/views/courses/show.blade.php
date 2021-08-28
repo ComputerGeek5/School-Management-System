@@ -18,6 +18,7 @@
                         {{ Form::submit("Delete", ["class" => "btn btn-block btn-danger"]) }}
                         {!! Form::close() !!}
                     @endif
+                    <a href="/teachers/{{ $course->teacher_id }}" class="btn btn-block btn-warning mt-2">Teacher</a>
                 </div>
             </div>
             <div class="col-md-8">
