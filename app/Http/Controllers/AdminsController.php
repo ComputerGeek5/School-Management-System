@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Storage;
 class AdminsController extends Controller
 {
     public function index(Request $request){
+        $this->authorize("viewAny", Admin::class);
+
         // Get the search value from the request
         $search = $request->input('search');
 
@@ -90,6 +92,8 @@ class AdminsController extends Controller
      */
     public function show($id)
     {
+        $this->authorize("viewAny", Admin::class);
+
         // Check if admin exists
         $admin = Admin::findOrFail($id);
 
