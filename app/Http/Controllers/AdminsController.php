@@ -35,6 +35,7 @@ class AdminsController extends Controller
      */
     public function create()
     {
+        $this->authorize("create", Admin::class);
         return view("admins.create");
     }
 
@@ -46,6 +47,8 @@ class AdminsController extends Controller
      */
     public function store(AdminStoreRequest $request)
     {
+        $this->authorize("create", Admin::class);
+
         // Validate Request
         $validated = $request->validated();
 
@@ -115,6 +118,8 @@ class AdminsController extends Controller
         // Check if admin exists
         $admin = Admin::findOrFail($id);
 
+        $this->authorize("update", $admin);
+
         if($admin->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
         }
@@ -131,6 +136,11 @@ class AdminsController extends Controller
      */
     public function update(AdminUpdateRequest $request, $id)
     {
+        // Check if admin exists
+        $admin = Admin::findOrFail($id);
+
+        $this->authorize("update", $admin);
+
         // Validate Request
         $validated = $request->validated();
 
@@ -159,9 +169,6 @@ class AdminsController extends Controller
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         }
 
-        // Check if admin exists
-        $admin = Admin::findOrFail($id);
-
         // Update admin
         $admin->name = $validated["name"];
 
@@ -187,14 +194,16 @@ class AdminsController extends Controller
         // Check if user exists
         $user = User::findOrFail($id);
 
+        // Check if admin exists
+        $admin = Admin::findOrFail($id);
+
+        $this->authorize("delete", $admin);
+
         if(auth()->user()->role === "ADMIN" && $user->role === "ADMIN" && $user->id !== auth()->user()->id) {
             return redirect("/admins")->with("error", "You cannot delete other admins");
         } elseif(auth()->user()->role !== "ADMIN") {
             return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
-
-        // Check if admin exists
-        $admin = Admin::findOrFail($id);
 
         // Delete admin's image if default not selected
         if($admin->image !== "noimage.jpg") {
