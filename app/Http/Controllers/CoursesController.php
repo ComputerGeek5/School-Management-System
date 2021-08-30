@@ -12,6 +12,8 @@ use App\Models\Teacher;
 class CoursesController extends Controller
 {
     public function index(Request $request){
+        $this->authorize("viewAny", Course::class);
+
         // Get the search value from the request
         $search = $request->input('search');
 
@@ -32,6 +34,8 @@ class CoursesController extends Controller
      */
     public function create()
     {
+        $this->authorize("create", Course::class);
+
         if(auth()->user()->role !== "Teacher") {
             return view("/")->with("error", "Only teachers can create courses");
         }
@@ -47,6 +51,8 @@ class CoursesController extends Controller
      */
     public function store(CourseStoreRequest $request)
     {
+        $this->authorize("create", Course::class);
+
         // Validate Request
         $validated = $request->validated();
 
@@ -76,7 +82,9 @@ class CoursesController extends Controller
     public function show($id)
     {
         // Check if course exists
-        $course = Course::findOrFail($id);
+        $course = Course::findOrFail($id)->get();
+
+        $this->authorize("view", $course);
 
         if(auth()->user()->role === "ADMIN") {
             return redirect("/admins")->with("error", "Only teachers and students can view courses");
@@ -94,7 +102,9 @@ class CoursesController extends Controller
     public function edit($id)
     {
         // Check if course exists
-        $course = Course::findOrFail($id);
+        $course = Course::findOrFail($id)->get()->get();
+
+        $this->authorize("update", $course);
 
         if(auth()->user()->role !== "Teacher") {
             return redirect("/")->with("error", "Only teachers can edit courses");
@@ -114,11 +124,13 @@ class CoursesController extends Controller
      */
     public function update(CourseUpdateRequest $request, $id)
     {
+        // Check if course exists
+        $course = Course::findOrFail($id)->get()->get();
+
+        $this->authorize("update", $course);
+
         // Validate Request
         $validated = $request->validated();
-
-        // Check if course exists
-        $course = Course::findOrFail($id);
 
         if(auth()->user()->role !== "Teacher") {
             return view("/")->with("error", "Only teachers can edit courses");
@@ -146,7 +158,9 @@ class CoursesController extends Controller
     public function destroy($id)
     {
         // Check if course exists
-        $course = Course::findOrFail($id);
+        $course = Course::findOrFail($id)->get();
+
+        $this->authorize("destroy", $course);
 
         if(auth()->user()->role !== "Teacher") {
             return view("/")->with("error", "Only teachers can delete courses");

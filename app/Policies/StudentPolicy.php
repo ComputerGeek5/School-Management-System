@@ -18,7 +18,7 @@ class StudentPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->role === "Student";
+        return $user->role !== "Teacher";
     }
 
     /**
@@ -30,7 +30,7 @@ class StudentPolicy
      */
     public function view(User $user, Student $student)
     {
-        return $user->role === "Student";
+        return $user->role !== "Teacher";
     }
 
     /**
@@ -65,7 +65,7 @@ class StudentPolicy
      */
     public function delete(User $user, Student $student)
     {
-        return $student->id === $user->id;
+        return $student->id === $user->id || $user->role === "ADMIN";
     }
 
     /**
@@ -77,7 +77,7 @@ class StudentPolicy
      */
     public function restore(User $user, Student $student)
     {
-        return $student->id === $user->id;
+        return $student->id === $user->id || $user->role === "ADMIN";
     }
 
     /**
@@ -89,6 +89,6 @@ class StudentPolicy
      */
     public function forceDelete(User $user, Student $student)
     {
-        return $student->id === $user->id;
+        return $student->id === $user->id || $user->role === "ADMIN";
     }
 }

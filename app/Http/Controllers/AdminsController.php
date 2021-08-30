@@ -98,7 +98,7 @@ class AdminsController extends Controller
         $this->authorize("viewAny", Admin::class);
 
         // Check if admin exists
-        $admin = Admin::findOrFail($id);
+        $admin = Admin::findOrFail($id)->get();
 
         if(auth()->user()->role !== "ADMIN") {
             return redirect("/")->with("error", "You cannot view other users's profiles");
@@ -116,7 +116,7 @@ class AdminsController extends Controller
     public function edit($id)
     {
         // Check if admin exists
-        $admin = Admin::findOrFail($id);
+        $admin = Admin::findOrFail($id)->get();
 
         $this->authorize("update", $admin);
 
@@ -137,7 +137,7 @@ class AdminsController extends Controller
     public function update(AdminUpdateRequest $request, $id)
     {
         // Check if admin exists
-        $admin = Admin::findOrFail($id);
+        $admin = Admin::findOrFail($id)->get();
 
         $this->authorize("update", $admin);
 
@@ -145,7 +145,7 @@ class AdminsController extends Controller
         $validated = $request->validated();
 
         // Check if user exists
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($id)->get();
 
         if($user->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
@@ -192,10 +192,10 @@ class AdminsController extends Controller
     public function destroy($id)
     {
         // Check if user exists
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($id)->get();
 
         // Check if admin exists
-        $admin = Admin::findOrFail($id);
+        $admin = Admin::findOrFail($id)->get();
 
         $this->authorize("delete", $admin);
 

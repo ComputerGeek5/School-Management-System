@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Storage;
 class TeachersController extends Controller
 {
     public function index(Request $request){
+        $this->authorize("viewAny", Teacher::class);
+
         // Get the search value from the request
         $search = $request->input('search');
 
@@ -35,6 +37,7 @@ class TeachersController extends Controller
      */
     public function create()
     {
+        $this->authorize("create", Teacher::class);
         return view("teachers.create");
     }
 
@@ -46,6 +49,8 @@ class TeachersController extends Controller
      */
     public function store(TeacherStoreRequest $request)
     {
+        $this->authorize("create", Teacher::class);
+
         // Validate Request
         $validated = $request->validated();
 
@@ -96,7 +101,9 @@ class TeachersController extends Controller
     public function show($id)
     {
         // Check if teacher exists
-        $teacher = Teacher::findOrFail($id);
+        $teacher = Teacher::findOrFail($id)->get();
+
+        $this->authorize("view", $teacher);
 
         return view("teachers.show")->with("teacher", $teacher);
     }
@@ -110,7 +117,9 @@ class TeachersController extends Controller
     public function edit($id)
     {
         // Check if teacher exists
-        $teacher = Teacher::findOrFail($id);
+        $teacher = Teacher::findOrFail($id)->get();
+
+        $this->authorize("update", $teacher);
 
         if(auth()->user()->id !== $teacher->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
@@ -128,11 +137,16 @@ class TeachersController extends Controller
      */
     public function update(TeacherUpdateRequest $request, $id)
     {
+        // Check if teacher exists
+        $teacher = Teacher::findOrFail($id)->get();
+
+        $this->authorize("update", $teacher);
+
         // Validate Request
         $validated = $request->validated();
 
         // Find user
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($id)->get();
 
         if($user->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
@@ -140,9 +154,11 @@ class TeachersController extends Controller
 
         // Update user
         $user->name = $validated["name"];
+
         if(!empty($validated["password"])) {
             $user->password = Hash::make($validated["password"]);
         }
+
         $user->save();
 
         // Handle image upload
@@ -159,8 +175,6 @@ class TeachersController extends Controller
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         }
 
-        // Check if teacher exists
-        $teacher = Teacher::findOrFail($id);
         $teacher->name = $validated["name"];
         $teacher->title = $validated["title"];
         $teacher->faculty = $validated["faculty"];
@@ -185,13 +199,16 @@ class TeachersController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
+        // Check if teacher exists
+        $teacher = Teacher::findOrFail($id)->get();
+
+        $this->authorize("destroy", $teacher);
+
+        $user = User::findOrFail($id)->get();
 
         if(auth()->user()->role === "Student") {
             return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
-
-        $teacher = Teacher::findOrFail($id);
 
         // Unenroll all students from this teacher's courses
         $students = Student::all();

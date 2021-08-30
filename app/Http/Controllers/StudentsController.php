@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 class StudentsController extends Controller
 {
     public function index(Request $request){
+        $this->authorize("viewAny", Student::class);
         // Get the search value from the request
         $search = $request->input('search');
 
@@ -34,6 +35,8 @@ class StudentsController extends Controller
      */
     public function create()
     {
+        $this->authorize("create", Student::class);
+
         return view("students.create");
     }
 
@@ -45,6 +48,8 @@ class StudentsController extends Controller
      */
     public function store(StudentStoreRequest $request)
     {
+        $this->authorize("create", Student::class);
+
         //  Validate Request
         $validated = $request->validated();
 
@@ -94,6 +99,8 @@ class StudentsController extends Controller
      */
     public function show($id)
     {
+        $this->authorize("view", Student::class);
+
         // Check if student exists
         $student = Student::findOrFail($id);
 
@@ -115,6 +122,8 @@ class StudentsController extends Controller
         // Check if student exists
         $student = Student::findOrFail($id);
 
+        $this->authorize("update", $student);
+
         if($student->id !== auth()->user()->id) {
             return redirect("/")->with("error", "You cannot edit other users's profiles");
         }
@@ -131,6 +140,11 @@ class StudentsController extends Controller
      */
     public function update(StudentUpdateRequest $request, $id)
     {
+        // Check if student exists
+        $student = Student::findOrFail($id);
+
+        $this->authorize("update", $student);
+
         // Validate Request
         $validated = $request->validated();
 
@@ -148,6 +162,7 @@ class StudentsController extends Controller
         if(!empty($request->input("password"))) {
             $user->password = Hash::make($request->input("password"));
         }
+
         $user->save();
 
         // Handle image upload
@@ -163,9 +178,6 @@ class StudentsController extends Controller
             // Upload image
             $request->file("image")->storeAs("public/images", $fileNameToStore);
         }
-
-        // Check if student exists
-        $student = Student::findOrFail($id);
 
         // Update student
         $student->name = $validated["name"];
@@ -192,15 +204,17 @@ class StudentsController extends Controller
      */
     public function destroy($id)
     {
+        // Check if student exists
+        $student = Student::findOrFail($id);
+
+        $this->authorize("destroy", $student);
+
         // Check if user exists
         $user = User::findOrFail($id);
 
         if(auth()->user()->role === "Teacher") {
             return redirect("/")->with("error", "You cannot delete other users's accounts");
         }
-
-        // Check if student exists
-        $student = Student::findOrFail($id);
 
         // Delete image if not default
         if($student->image !== "noimage.jpg") {
@@ -224,6 +238,7 @@ class StudentsController extends Controller
     public function selected() {
         // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);
+
         $courses_ids = array_reverse($student->courses);
         $courses = array();
 
@@ -236,6 +251,9 @@ class StudentsController extends Controller
     }
 
     public function take(Request $request) {
+        // Check if student exists
+        $student = Student::findOrFail(auth()->user()->id);
+
         // Get the search value from the request
         $search = $request->input('search');
 
@@ -244,8 +262,6 @@ class StudentsController extends Controller
             ->where('name', 'LIKE', "%{$search}%")
             ->simplePaginate(4);
 
-        // Check if student exists
-        $student = Student::findOrFail(auth()->user()->id);
         $courses_ids = $student->courses;
 
         return view("students.take", [
@@ -255,11 +271,12 @@ class StudentsController extends Controller
     }
 
     public function enroll($id) {
-        // Check if course exists
-        Course::findOrFaiL($id);
-
         // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);
+
+        // Check if course exists
+        Course::findOrFaiL($id)->get();
+
         $courses = $student->courses;
 
         // Add course id to selected courses
@@ -275,11 +292,12 @@ class StudentsController extends Controller
     }
 
     public function unenroll($id) {
-        // Check if course exists
-        $course = Course::findOrFaiL($id);
-
         // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);
+
+        // Check if course exists
+        $course = Course::findOrFaiL($id)->get();
+
         $courses = $student->courses;
 
         // Remove course id from selected courses

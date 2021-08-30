@@ -18,7 +18,7 @@ class TeacherPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -30,7 +30,7 @@ class TeacherPolicy
      */
     public function view(User $user, Teacher $teacher)
     {
-        //
+        return true;
     }
 
     /**
@@ -41,7 +41,7 @@ class TeacherPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->role === "ADMIN";
     }
 
     /**
@@ -53,7 +53,7 @@ class TeacherPolicy
      */
     public function update(User $user, Teacher $teacher)
     {
-        //
+        return $user->id === $teacher->id;
     }
 
     /**
@@ -65,7 +65,7 @@ class TeacherPolicy
      */
     public function delete(User $user, Teacher $teacher)
     {
-        //
+        return $user->id === $teacher->id || $user->role === "ADMIN";
     }
 
     /**
@@ -77,7 +77,7 @@ class TeacherPolicy
      */
     public function restore(User $user, Teacher $teacher)
     {
-        //
+        return  $user->role === "ADMIN";
     }
 
     /**
@@ -89,6 +89,6 @@ class TeacherPolicy
      */
     public function forceDelete(User $user, Teacher $teacher)
     {
-        //
+        return $user->id === $teacher->id || $user->role === "ADMIN";
     }
 }

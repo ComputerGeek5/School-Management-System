@@ -77,7 +77,7 @@ class AdminPolicy
      */
     public function restore(User $user, Admin $admin)
     {
-        return $admin->id === $user->id;
+        return $user->role === "ADMIN";
     }
 
     /**
