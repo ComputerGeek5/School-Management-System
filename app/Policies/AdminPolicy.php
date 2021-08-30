@@ -53,7 +53,7 @@ class AdminPolicy
      */
     public function update(User $user, Admin $admin)
     {
-        return $user->role === "ADMIN" && $admin->id === $user->id;
+        return $admin->id === $user->id;
     }
 
     /**
@@ -65,7 +65,7 @@ class AdminPolicy
      */
     public function delete(User $user, Admin $admin)
     {
-        return $user->role === "ADMIN" && $admin->id === $user->id;
+        return $admin->id === $user->id;
     }
 
     /**
@@ -77,7 +77,7 @@ class AdminPolicy
      */
     public function restore(User $user, Admin $admin)
     {
-        return $user->role === "ADMIN" && $admin->id === $user->id;
+        return $admin->id === $user->id;
     }
 
     /**
@@ -89,6 +89,6 @@ class AdminPolicy
      */
     public function forceDelete(User $user, Admin $admin)
     {
-        return $user->role === "ADMIN" && $admin->id === $user->id;
+        return $admin->id === $user->id;
     }
 }
