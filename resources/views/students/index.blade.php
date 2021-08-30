@@ -1,7 +1,7 @@
 @extends("layouts.app")
 
 @section("content")
-    {!! Form::open(["action" => "App\Http\Controllers\StudentsController@search", "method" => "GET"]) !!}
+    {!! Form::open(["action" => "App\Http\Controllers\StudentsController@index", "method" => "GET"]) !!}
     <div class="form-group">
         {{ Form::text("search", "", ["class" => "form-control text-center", "placeholder" => "Student"]) }}
     </div>
@@ -34,9 +34,12 @@
                 </td>
             </tr>
         @endforeach
+        </tbody>
+    </table>
+    <div class="row justify-content-center">
+        {{ $students->links() }}
+    </div>
     @else
-        <div>
-            <h1><em>No students found</em></h1>
-        </div>
+        <h1><em>No students found</em></h1>
     @endif
 @endsection

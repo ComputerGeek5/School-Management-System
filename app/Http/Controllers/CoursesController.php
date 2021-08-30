@@ -11,7 +11,7 @@ use App\Models\Teacher;
 
 class CoursesController extends Controller
 {
-    public function search(Request $request){
+    public function index(Request $request){
         // Get the search value from the request
         $search = $request->input('search');
 
@@ -19,22 +19,10 @@ class CoursesController extends Controller
         $courses = Course::query()
             ->where("teacher_id", "=", auth()->user()->id)
             ->where('name', 'LIKE', "%{$search}%")
-            ->get();
+            ->simplePaginate(4);
 
         // Return the search view with the results
-        return view('courses.search')->with("courses", $courses);
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        // Get all courses of the current teacher
-        $courses = Course::where("teacher_id", "=", auth()->user()->id)->orderBy(
-            "created_at", "DESC")->get();
-        return view("courses.index")->with("courses", $courses);
+        return view('courses.index')->with("courses", $courses);
     }
 
     /**

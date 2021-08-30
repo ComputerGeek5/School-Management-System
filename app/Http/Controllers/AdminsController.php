@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminsController extends Controller
 {
-    public function search(Request $request){
+    public function index(Request $request){
         // Get the search value from the request
         $search = $request->input('search');
 
@@ -20,10 +20,10 @@ class AdminsController extends Controller
         $users = User::query()
             ->where("id", "!=", auth()->user()->id)
             ->where('name', 'LIKE', "%{$search}%")
-            ->get();
+            ->simplePaginate(4);
 
         // Return the search view with the results
-        return view('admins.search')->with("users", $users);
+        return view('admins.index')->with("users", $users);
     }
 
     /**

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 
 class TeachersController extends Controller
 {
-    public function search(Request $request){
+    public function index(Request $request){
         // Get the search value from the request
         $search = $request->input('search');
 
@@ -22,22 +22,10 @@ class TeachersController extends Controller
         $teachers = Teacher::query()
             ->where("id", "!=", auth()->user()->id)
             ->where('name', 'LIKE', "%{$search}%")
-            ->get();
+            ->simplePaginate(4);
 
         // Return the search view with the results
-        return view('teachers.search')->with("teachers", $teachers);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        // Get all users except the authenticated one
-        $teachers = Teacher::where("id", "!=", auth()->user()->id)->orderBy("name", "ASC")->get();
-        return view("teachers.index")->with("teachers", $teachers);
+        return view('teachers.index')->with("teachers", $teachers);
     }
 
     /**

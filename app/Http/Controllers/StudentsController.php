@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class StudentsController extends Controller
 {
-    public function search(Request $request){
+    public function index(Request $request){
         // Get the search value from the request
         $search = $request->input('search');
 
@@ -24,19 +24,7 @@ class StudentsController extends Controller
             ->get();
 
         // Return the search view with the results
-        return view('students.search')->with("students", $students);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        // Get all users except the authenticated one
-        $students = Student::where("id", "!=", auth()->user()->id)->orderBy("name", "ASC")->get();
-        return view("students.index")->with("students", $students);
+        return view('students.index')->with("students", $students);
     }
 
     /**
