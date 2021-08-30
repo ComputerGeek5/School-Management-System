@@ -17,21 +17,21 @@ class AdminSeeder extends Seeder
     public function run()
     {
         $this->seedAdmin(
-            1, "Jack Black", "jackblack@gmail.com", "noimage.jpg"
+            1, "Jack Black", "jackblack@gmail.com"
         );
 
         $this->seedAdmin(
-            2, "Mary Smith", "marysmith@gmail.com", "noimage.jpg"
+            2, "Mary Smith", "marysmith@gmail.com"
         );
     }
 
-    public function seedAdmin($id, $name, $email, $image): void
+    public function seedAdmin($id, $name, $email): void
     {
         DB::table('admins')->insert([
             "id" => $id,
             "name" => $name,
             "email" => $email,
-            "image" => $image,
+            "image" => "noimage.jpg",
             "created_at" => Carbon::now(),
             "updated_at" => Carbon::now(),
         ]);

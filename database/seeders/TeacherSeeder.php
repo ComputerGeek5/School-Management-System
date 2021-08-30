@@ -17,48 +17,48 @@ class TeacherSeeder extends Seeder
     {
         $this->seedTeacher(
             11, "Richard Hendrickson", "richardhendrickson@gmail.com", "Professor",
-            "Faculty Of Engineering & Architecture", "", "noimage.jpg"
+            "Faculty Of Engineering & Architecture"
         );
 
         $this->seedTeacher(
             12, "Sarah Martin", "sarahmartin@gmail.com", "Assistant Professor",
-            "Faculty Of Economy", "", "noimage.jpg"
+            "Faculty Of Economy"
         );
 
         $this->seedTeacher(
             13, "William Perez", "williamperez@gmail.com", "Associate Professor",
-            "Faculty Of Foreign Languages", "", "noimage.jpg"
+            "Faculty Of Foreign Languages"
         );
 
         $this->seedTeacher(
             14, "Patricia White", "patriciawhite@gmail.com", "Professor",
-            "Faculty Of History and Philology", "", "noimage.jpg"
+            "Faculty Of History and Philology"
         );
 
         $this->seedTeacher(
             15, "Daniel Robinson", "danielrobinson@gmail.com", "Instructor",
-            "Faculty Of Law & Social Sciences", "", "noimage.jpg"
+            "Faculty Of Law & Social Sciences"
         );
 
         $this->seedTeacher(
             16, "Nancy Allen", "nancyallen@gmail.com", "Assistant Professor",
-            "Faculty Of Engineering & Architecture", "", "noimage.jpg"
+            "Faculty Of Engineering & Architecture"
         );
 
         $this->seedTeacher(
             17, "Steven Adams", "stevenadams@gmail.com", "Instructor",
-            "Faculty Of Economy", "", "noimage.jpg"
+            "Faculty Of Economy"
         );
 
         $this->seedTeacher(
             18, "Ashley Baker", "ashleybaker@gmail.com", "Associate Professor",
-            "Faculty Of Foreign Languages", "", "noimage.jpg"
+            "Faculty Of Foreign Languages"
         );
     }
 
     public function seedTeacher(
         $id, $name, $email, $title,
-        $faculty, $about, $image
+        $faculty
     ): void
     {
         DB::table('teachers')->insert([
@@ -67,8 +67,8 @@ class TeacherSeeder extends Seeder
             "email" => $email,
             "title" => $title,
             "faculty" => $faculty,
-            "about" => $about,
-            "image" => $image,
+            "about" => "",
+            "image" => "noimage.jpg",
             "created_at" => Carbon::now(),
             "updated_at" => Carbon::now(),
         ]);

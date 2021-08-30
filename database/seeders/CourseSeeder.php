@@ -17,48 +17,48 @@ class CourseSeeder extends Seeder
     {
         $this->seedCourse(
             "Object-Oriented Programming", 11, "CEN107", 7,
-            "Compulsory", ""
+            "Compulsory"
         );
 
         $this->seedCourse(
             "Web Programming", 11, "WEB304", 5,
-            "Elective", ""
+            "Elective"
         );
 
         $this->seedCourse(
             "Turkish", 18, "TUR607", 4,
-            "Elective", ""
+            "Elective"
         );
 
         $this->seedCourse(
             "Economy", 12, "ECO501", 6,
-            "Compulsory", ""
+            "Compulsory"
         );
 
         $this->seedCourse(
             "Ancient History", 14, "ANC321", 7,
-            "Compulsory", ""
+            "Compulsory"
         );
 
         $this->seedCourse(
             "Geomorphology", 14, "GEO780", 5,
-            "Elective", ""
+            "Elective"
         );
 
         $this->seedCourse(
             "Data Structures & Algorithms", 18, "DAS444", 7,
-            "Compulsory", ""
+            "Compulsory"
         );
 
         $this->seedCourse(
             "Geopolitics", 15, "GPL866", 5,
-            "Compulsory", ""
+            "Compulsory"
         );
     }
 
     public function seedCourse(
         $name, $teacher_id, $code, $ects,
-        $type, $description
+        $type
     ): void
     {
         DB::table('courses')->insert([
@@ -67,7 +67,7 @@ class CourseSeeder extends Seeder
             "code" => $code,
             "ects" => $ects,
             "type" => $type,
-            "description" => $description,
+            "description" => "To be updated.",
             "created_at" => Carbon::now(),
             "updated_at" => Carbon::now(),
         ]);

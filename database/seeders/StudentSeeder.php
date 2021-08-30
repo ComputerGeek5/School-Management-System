@@ -16,60 +16,60 @@ class StudentSeeder extends Seeder
     public function run()
     {
         $this->seedStudent(
-            3, "John Green", "[]","johngreen@gmail.com", "Software Engineering",
-            "2027", "", "noimage.jpg"
+            3, "John Green","johngreen@gmail.com", "Software Engineering",
+            "2027"
         );
 
         $this->seedStudent(
-            4, "Jennifer Williams", "[]","jenniferwilliams@gmail.com", "Economics",
-            "2025", "", "noimage.jpg"
+            4, "Jennifer Williams","jenniferwilliams@gmail.com", "Economics",
+            "2025"
         );
 
         $this->seedStudent(
-            5, "Charles Brown", "[]","charlesbrown@gmail.com", "Banking & Finance",
-            "2029", "", "noimage.jpg"
+            5, "Charles Brown","charlesbrown@gmail.com", "Banking & Finance",
+            "2029"
         );
 
         $this->seedStudent(
-            6, "Elizabeth Johnson", "[]","elizabethjohnson@gmail.com", "Law",
-            "2027", "", "noimage.jpg"
+            6, "Elizabeth Johnson","elizabethjohnson@gmail.com", "Law",
+            "2027"
         );
 
         $this->seedStudent(
-            7, "Douglas Jones", "[]","douglasjones@gmail.com", "Computer Engineering",
-            "2023", "", "noimage.jpg"
+            7, "Douglas Jones","douglasjones@gmail.com", "Computer Engineering",
+            "2023"
         );
 
         $this->seedStudent(
-            8, "Barbara Lee", "[]","barbaralee@gmail.com", "Psychology",
-            "2030", "", "noimage.jpg"
+            8, "Barbara Lee","barbaralee@gmail.com", "Psychology",
+            "2030"
         );
 
         $this->seedStudent(
-            9, "Thomas Moore", "[]","thomasmoore@gmail.com", "History",
-            "2024", "", "noimage.jpg"
+            9, "Thomas Moore","thomasmoore@gmail.com", "History",
+            "2024"
         );
 
         $this->seedStudent(
-            10, "Regina Miller", "[]","reginamiller@gmail.com", "Italian Language",
-            "2032", "", "noimage.jpg"
+            10, "Regina Miller","reginamiller@gmail.com", "Italian Language",
+            "2032"
         );
     }
 
     public function seedStudent(
-        $id, $name, $courses, $email,
-        $program, $graduation_year, $about, $image
+        $id, $name, $email,
+        $program, $graduation_year
     ): void
     {
         DB::table('students')->insert([
             "id" => $id,
             "name" => $name,
-            "courses" => $courses,
+            "courses" => "[]",
             "email" => $email,
             "program" => $program,
             "graduation_year" => $graduation_year,
-            "about" => $about,
-            "image" => $image,
+            "about" => "",
+            "image" => "noimage.jpg",
             "created_at" => Carbon::now(),
             "updated_at" => Carbon::now(),
         ]);
