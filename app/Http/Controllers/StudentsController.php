@@ -99,14 +99,10 @@ class StudentsController extends Controller
      */
     public function show($id)
     {
-        $this->authorize("view", Student::class);
-
         // Check if student exists
         $student = Student::findOrFail($id);
 
-        if(auth()->user()->role === "Teacher") {
-            return redirect("/")->with("error", "You cannot view students's profiles");
-        }
+        $this->authorize("view", $student);
 
         return view("students.show")->with("student", $student);
     }
@@ -123,10 +119,6 @@ class StudentsController extends Controller
         $student = Student::findOrFail($id);
 
         $this->authorize("update", $student);
-
-        if($student->id !== auth()->user()->id) {
-            return redirect("/")->with("error", "You cannot edit other users's profiles");
-        }
 
         return view("students.edit")->with("student", $student);
     }
@@ -150,10 +142,6 @@ class StudentsController extends Controller
 
         // Check if user exists
         $user = User::findOrFail($id);
-
-        if($user->id !== auth()->user()->id) {
-            return redirect("/")->with("error", "You cannot edit other users's profiles");
-        }
 
         // Update User
         $user->name = $validated["name"];
@@ -211,10 +199,6 @@ class StudentsController extends Controller
 
         // Check if user exists
         $user = User::findOrFail($id);
-
-        if(auth()->user()->role === "Teacher") {
-            return redirect("/")->with("error", "You cannot delete other users's accounts");
-        }
 
         // Delete image if not default
         if($student->image !== "noimage.jpg") {
@@ -296,7 +280,7 @@ class StudentsController extends Controller
         $student = Student::findOrFail(auth()->user()->id);
 
         // Check if course exists
-        $course = Course::findOrFaiL($id)->get();
+        Course::findOrFaiL($id)->get();
 
         $courses = $student->courses;
 

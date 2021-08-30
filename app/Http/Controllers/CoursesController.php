@@ -36,10 +36,6 @@ class CoursesController extends Controller
     {
         $this->authorize("create", Course::class);
 
-        if(auth()->user()->role !== "Teacher") {
-            return view("/")->with("error", "Only teachers can create courses");
-        }
-
         return view("courses.create");
     }
 
@@ -55,10 +51,6 @@ class CoursesController extends Controller
 
         // Validate Request
         $validated = $request->validated();
-
-        if(auth()->user()->role !== "Teacher") {
-            return view("/")->with("error", "Only teachers can create courses");
-        }
 
         // Create New Course
         $course = new Course();
@@ -86,10 +78,6 @@ class CoursesController extends Controller
 
         $this->authorize("view", $course);
 
-        if(auth()->user()->role === "ADMIN") {
-            return redirect("/admins")->with("error", "Only teachers and students can view courses");
-        }
-
         return view("courses.show")->with("course", $course);
     }
 
@@ -105,12 +93,6 @@ class CoursesController extends Controller
         $course = Course::findOrFail($id)->get()->get();
 
         $this->authorize("update", $course);
-
-        if(auth()->user()->role !== "Teacher") {
-            return redirect("/")->with("error", "Only teachers can edit courses");
-        } elseif(auth()->user()->id !== $course->teacher_id) {
-            return redirect("/teachers")->with("error", "You cannot edit other teachers's courses");
-        }
 
         return view("courses.edit")->with("course", $course);
     }
@@ -131,12 +113,6 @@ class CoursesController extends Controller
 
         // Validate Request
         $validated = $request->validated();
-
-        if(auth()->user()->role !== "Teacher") {
-            return view("/")->with("error", "Only teachers can edit courses");
-        } elseif(auth()->user()->id !== $course->teacher_id) {
-            return redirect("/teachers")->with("error", "You cannot edit other teachers's courses");
-        }
 
         // Update course
         $course->code = $validated["code"];
@@ -161,12 +137,6 @@ class CoursesController extends Controller
         $course = Course::findOrFail($id)->get();
 
         $this->authorize("destroy", $course);
-
-        if(auth()->user()->role !== "Teacher") {
-            return view("/")->with("error", "Only teachers can delete courses");
-        } elseif(auth()->user()->id !== $course->teacher_id) {
-            return redirect("/teachers")->with("error", "You cannot delete other teachers's courses");
-        }
 
         // Delete course
         $course->delete();

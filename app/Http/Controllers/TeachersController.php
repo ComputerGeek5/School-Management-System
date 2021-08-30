@@ -121,10 +121,6 @@ class TeachersController extends Controller
 
         $this->authorize("update", $teacher);
 
-        if(auth()->user()->id !== $teacher->id) {
-            return redirect("/")->with("error", "You cannot edit other users's profiles");
-        }
-
         return view("teachers.edit")->with("teacher", $teacher);
     }
 
@@ -147,10 +143,6 @@ class TeachersController extends Controller
 
         // Find user
         $user = User::findOrFail($id)->get();
-
-        if($user->id !== auth()->user()->id) {
-            return redirect("/")->with("error", "You cannot edit other users's profiles");
-        }
 
         // Update user
         $user->name = $validated["name"];
@@ -205,10 +197,6 @@ class TeachersController extends Controller
         $this->authorize("destroy", $teacher);
 
         $user = User::findOrFail($id)->get();
-
-        if(auth()->user()->role === "Student") {
-            return redirect("/")->with("error", "You cannot delete other users's accounts");
-        }
 
         // Unenroll all students from this teacher's courses
         $students = Student::all();

@@ -95,14 +95,10 @@ class AdminsController extends Controller
      */
     public function show($id)
     {
-        $this->authorize("viewAny", Admin::class);
-
         // Check if admin exists
         $admin = Admin::findOrFail($id)->get();
 
-        if(auth()->user()->role !== "ADMIN") {
-            return redirect("/")->with("error", "You cannot view other users's profiles");
-        }
+        $this->authorize("view", $admin);
 
         return view("admins.show")->with("admin", $admin);
     }
@@ -119,10 +115,6 @@ class AdminsController extends Controller
         $admin = Admin::findOrFail($id)->get();
 
         $this->authorize("update", $admin);
-
-        if($admin->id !== auth()->user()->id) {
-            return redirect("/")->with("error", "You cannot edit other users's profiles");
-        }
 
         return view("admins.edit")->with("admin", $admin);
     }
@@ -146,10 +138,6 @@ class AdminsController extends Controller
 
         // Check if user exists
         $user = User::findOrFail($id)->get();
-
-        if($user->id !== auth()->user()->id) {
-            return redirect("/")->with("error", "You cannot edit other users's profiles");
-        }
 
         // Update User
         $user->name = $validated["name"];
@@ -198,12 +186,6 @@ class AdminsController extends Controller
         $admin = Admin::findOrFail($id)->get();
 
         $this->authorize("delete", $admin);
-
-        if(auth()->user()->role === "ADMIN" && $user->role === "ADMIN" && $user->id !== auth()->user()->id) {
-            return redirect("/admins")->with("error", "You cannot delete other admins");
-        } elseif(auth()->user()->role !== "ADMIN") {
-            return redirect("/")->with("error", "You cannot delete other users's accounts");
-        }
 
         // Delete admin's image if default not selected
         if($admin->image !== "noimage.jpg") {
