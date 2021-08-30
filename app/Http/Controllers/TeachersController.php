@@ -46,9 +46,6 @@ class TeachersController extends Controller
      */
     public function store(TeacherStoreRequest $request)
     {
-        // Default User Password
-        $default_user_password = "12345678";
-
         // Validate Request
         $validated = $request->validated();
 
@@ -57,7 +54,7 @@ class TeachersController extends Controller
         $user->name = $validated["name"];
         $user->role = "Teacher";
         $user->email = $validated["email"];
-        $user->password = Hash::make($default_user_password);
+        $user->password = Hash::make($validated["password"]);
         $user->save();
 
         // Handle image upload

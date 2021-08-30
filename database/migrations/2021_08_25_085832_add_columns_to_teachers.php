@@ -17,7 +17,7 @@ class AddColumnsToTeachers extends Migration
             $table->string("email");
             $table->string("title");
             $table->string("faculty");
-            $table->mediumText("about")->default("");
+            $table->mediumText("about")->nullable();
         });
     }
 

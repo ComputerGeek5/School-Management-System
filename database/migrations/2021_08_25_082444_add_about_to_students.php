@@ -14,7 +14,7 @@ class AddAboutToStudents extends Migration
     public function up()
     {
         Schema::table('students', function (Blueprint $table) {
-            $table->mediumText("about")->default("");
+            $table->mediumText("about")->nullable();
         });
     }
 

@@ -26,6 +26,7 @@ class TeacherStoreRequest extends FormRequest
         return [
             "name" => "required",
             "email" => "required|unique:users,email",
+            "password" => "required|min:8",
             "title" => "required",
             "faculty" => "required",
             "image" => "image|nullable|max:1999",

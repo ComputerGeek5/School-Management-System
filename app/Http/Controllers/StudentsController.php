@@ -21,7 +21,7 @@ class StudentsController extends Controller
         $students = Student::query()
             ->where("id", "!=", auth()->user()->id)
             ->where('name', 'LIKE', "%{$search}%")
-            ->get();
+            ->simplePaginate(4);
 
         // Return the search view with the results
         return view('students.index')->with("students", $students);
@@ -45,9 +45,6 @@ class StudentsController extends Controller
      */
     public function store(StudentStoreRequest $request)
     {
-        // Default User Password
-        $default_user_password = "12345678";
-
         //  Validate Request
         $validated = $request->validated();
 
@@ -56,7 +53,7 @@ class StudentsController extends Controller
         $user->name = $validated["name"];
         $user->role = "Student";
         $user->email = $validated["email"];
-        $user->password = Hash::make($default_user_password);
+        $user->password = Hash::make($validated["password"]);
         $user->save();
 
         // Handle image upload

@@ -26,6 +26,7 @@ class StudentStoreRequest extends FormRequest
         return [
             "name" => "required",
             "email" => "required|unique:users,email",
+            "password" => "required|min:8",
             "graduation_year" => "required",
             "program" => "required",
             "image" => "image|nullable|max:1999",
