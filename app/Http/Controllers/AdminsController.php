@@ -93,11 +93,8 @@ class AdminsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Admin $admin)
     {
-        // Check if admin exists
-        $admin = Admin::findOrFail($id)->get();
-
         $this->authorize("view", $admin);
 
         return view("admins.show")->with("admin", $admin);
@@ -109,11 +106,8 @@ class AdminsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Admin $admin)
     {
-        // Check if admin exists
-        $admin = Admin::findOrFail($id)->get();
-
         $this->authorize("update", $admin);
 
         return view("admins.edit")->with("admin", $admin);

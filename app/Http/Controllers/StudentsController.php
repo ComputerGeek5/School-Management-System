@@ -97,11 +97,8 @@ class StudentsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Student $student)
     {
-        // Check if student exists
-        $student = Student::findOrFail($id);
-
         $this->authorize("view", $student);
 
         return view("students.show")->with("student", $student);
@@ -113,11 +110,8 @@ class StudentsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Student $student)
     {
-        // Check if student exists
-        $student = Student::findOrFail($id);
-
         $this->authorize("update", $student);
 
         return view("students.edit")->with("student", $student);

@@ -98,11 +98,8 @@ class TeachersController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Teacher $teacher)
     {
-        // Check if teacher exists
-        $teacher = Teacher::findOrFail($id)->get();
-
         $this->authorize("view", $teacher);
 
         return view("teachers.show")->with("teacher", $teacher);
@@ -114,11 +111,8 @@ class TeachersController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Teacher $teacher)
     {
-        // Check if teacher exists
-        $teacher = Teacher::findOrFail($id)->get();
-
         $this->authorize("update", $teacher);
 
         return view("teachers.edit")->with("teacher", $teacher);

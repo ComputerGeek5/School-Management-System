@@ -71,11 +71,8 @@ class CoursesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Course $course)
     {
-        // Check if course exists
-        $course = Course::findOrFail($id)->get();
-
         $this->authorize("view", $course);
 
         return view("courses.show")->with("course", $course);
@@ -87,11 +84,8 @@ class CoursesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Course $course)
     {
-        // Check if course exists
-        $course = Course::findOrFail($id)->get()->get();
-
         $this->authorize("update", $course);
 
         return view("courses.edit")->with("course", $course);
@@ -104,13 +98,8 @@ class CoursesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CourseUpdateRequest $request, $id)
+    public function update(CourseUpdateRequest $request, Course $course)
     {
-        // Check if course exists
-        $course = Course::findOrFail($id)->get()->get();
-
-        $this->authorize("update", $course);
-
         // Validate Request
         $validated = $request->validated();
 
@@ -131,11 +120,8 @@ class CoursesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Course $course)
     {
-        // Check if course exists
-        $course = Course::findOrFail($id)->get();
-
         $this->authorize("destroy", $course);
 
         // Delete course
