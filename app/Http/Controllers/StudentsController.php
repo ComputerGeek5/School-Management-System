@@ -178,9 +178,6 @@ class StudentsController extends Controller
         // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);
 
-        // Authorize selected;
-        $this->authorize("selected", $student);
-
         $courses_ids = array_reverse($student->courses);
         $courses = array();
 

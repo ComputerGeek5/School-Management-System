@@ -18,7 +18,7 @@ class StudentPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->role !== "Teacher";
+        return $user->role === "Student";
     }
 
     /**

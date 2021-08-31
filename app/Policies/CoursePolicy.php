@@ -30,7 +30,7 @@ class CoursePolicy
      */
     public function view(User $user, Course $course)
     {
-        return $course->teacher()->id == $user->id;
+        return $user->role === "Student" || $user->role === "Teacher";
     }
 
     /**

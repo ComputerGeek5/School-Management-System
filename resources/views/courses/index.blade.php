@@ -15,7 +15,6 @@
         <tr>
             <th scope="col">Code</th>
             <th scope="col">Name</th>
-            <th scope="col">Teacher</th>
             <th scope="col">Type</th>
             <th scope="col"></th>
         </tr>
@@ -25,7 +24,6 @@
             <tr>
                 <td>{{ $course->code }}</td>
                 <td>{{ $course->name }}</td>
-                <td>{{  $course->teacher->name }}</td>
                 <td>{{ $course->type }}</td>
                 <td class="pt-2">
                     <div class="row d-flex flex-row">
