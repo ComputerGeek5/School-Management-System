@@ -123,6 +123,7 @@ class AdminsController extends Controller
 
         // Update User
         $user->name = $validated["name"];
+        update_password($user, $validated["password"]);
         $user->save();
 
         // Update admin

@@ -129,11 +129,10 @@ class TeachersController extends Controller
 
         // Update user
         $user->name = $validated["name"];
-        if(!empty($validated["password"])) {
-            $user->password = Hash::make($validated["password"]);
-        }
+        update_password($user, $validated["password"]);
         $user->save();
 
+        // Update teacher
         $teacher->name = $validated["name"];
         $teacher->title = $validated["title"];
         $teacher->faculty = $validated["faculty"];

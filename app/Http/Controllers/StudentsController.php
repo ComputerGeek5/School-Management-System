@@ -126,12 +126,9 @@ class StudentsController extends Controller
         // Validate Request
         $validated = $request->validated();
 
-        // Update User
+        // Update user
         $user->name = $validated["name"];
-        // Update password if not empty
-        if(!empty($validated["password"])) {
-            $user->password = Hash::make($validated["password"]);
-        }
+        update_password($user, $validated["password"]);
         $user->save();
 
         // Update student

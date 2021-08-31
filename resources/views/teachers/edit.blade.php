@@ -10,7 +10,7 @@
         </div>
         <div class="form-group">
             {{ Form::label("password", "Password") }}
-            {{ Form::password("password", "", ["class" => "form-control", "placeholder" => "Password"]) }}
+            {{ Form::password("password", ["class" => "form-control", "placeholder" => "Password"]) }}
         </div>
         <div class="form-group">
             {{ Form::label("about", "About Me") }}

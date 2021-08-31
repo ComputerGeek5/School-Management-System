@@ -9,6 +9,10 @@
             {{ Form::text("name", $admin->name, ["class" => "form-control", "placeholder" => "Name"]) }}
         </div>
         <div class="form-group">
+            {{ Form::label("password", "Password") }}
+            {{ Form::password("password", ["class" => "form-control", "placeholder" => "Password"]) }}
+        </div>
+        <div class="form-group">
             {{ Form::label("image", "Profile Picture") }}
             {{ Form::file("image") }}
         </div>

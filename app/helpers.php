@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 if(!function_exists("image_string")) {
@@ -52,6 +53,15 @@ if(!function_exists("image_delete")) {
         // Delete image if default not selected
         if($model->image !== "noimage.jpg") {
             Storage::delete("public/images/".$model->image);
+        }
+    }
+}
+
+if(!function_exists("update_password")) {
+    function update_password(Model $user, $password) {
+        // Update password if not empty
+        if(!empty($password)) {
+            $user->password = Hash::make($password);
         }
     }
 }
