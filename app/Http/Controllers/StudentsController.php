@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Storage;
 class StudentsController extends Controller
 {
     public function index(Request $request){
+        // Authorize viewAny
         $this->authorize("viewAny", Student::class);
+
         // Get the search value from the request
         $search = $request->input('search');
 
@@ -35,6 +37,7 @@ class StudentsController extends Controller
      */
     public function create()
     {
+        // Authorize create
         $this->authorize("create", Student::class);
 
         return view("students.create");
@@ -48,6 +51,7 @@ class StudentsController extends Controller
      */
     public function store(StudentStoreRequest $request)
     {
+        // Authorize create
         $this->authorize("create", Student::class);
 
         //  Validate Request
@@ -61,22 +65,6 @@ class StudentsController extends Controller
         $user->password = Hash::make($validated["password"]);
         $user->save();
 
-        // Handle image upload
-        if($request->hasFile("image")) {
-            // Get full name
-            $fileNameWithExt = $request->file("image")->getClientOriginalName();
-            // Get only name
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            // Get extension
-            $extension = $request->file("image")->getClientOriginalExtension();
-            // File name to store
-            $fileNameToStore = $fileName."_".time().".".$extension;
-            // Upload image
-            $request->file("image")->storeAs("public/images", $fileNameToStore);
-        } else {
-            $fileNameToStore = "noimage.jpg";
-        }
-
         // Create new student
         $student = new Student();
         $student->id = $user->id;
@@ -85,7 +73,7 @@ class StudentsController extends Controller
         $student->about = $validated["about"];
         $student->graduation_year = $validated["graduation_year"];
         $student->program = $validated["program"];
-        $student->image = $fileNameToStore;
+        image_create($request, $student);
         $student->save();
 
         return redirect("/admins")->with("success", "Student Created");
@@ -99,6 +87,7 @@ class StudentsController extends Controller
      */
     public function show(Student $student)
     {
+        // Authorize view
         $this->authorize("view", $student);
 
         return view("students.show")->with("student", $student);
@@ -112,6 +101,7 @@ class StudentsController extends Controller
      */
     public function edit(Student $student)
     {
+        // Authorize update
         $this->authorize("update", $student);
 
         return view("students.edit")->with("student", $student);
@@ -126,53 +116,30 @@ class StudentsController extends Controller
      */
     public function update(StudentUpdateRequest $request, $id)
     {
-        // Check if student exists
+        // Check if models exists
         $student = Student::findOrFail($id);
+        $user = User::findOrFail($id);
 
+        // Authorize update
         $this->authorize("update", $student);
 
         // Validate Request
         $validated = $request->validated();
 
-        // Check if user exists
-        $user = User::findOrFail($id);
-
         // Update User
         $user->name = $validated["name"];
-
         // Update password if not empty
-        if(!empty($request->input("password"))) {
-            $user->password = Hash::make($request->input("password"));
+        if(!empty($validated["password"])) {
+            $user->password = Hash::make($validated["password"]);
         }
-
         $user->save();
-
-        // Handle image upload
-        if($request->hasFile("image")) {
-            // Get full name
-            $fileNameWithExt = $request->file("image")->getClientOriginalName();
-            // Get only name
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            // Get extension
-            $extension = $request->file("image")->getClientOriginalExtension();
-            // File name to store
-            $fileNameToStore = $fileName."_".time().".".$extension;
-            // Upload image
-            $request->file("image")->storeAs("public/images", $fileNameToStore);
-        }
 
         // Update student
         $student->name = $validated["name"];
         $student->about = $validated["about"];
         $student->graduation_year = $validated["graduation_year"];
         $student->program = $validated["program"];
-
-        // Update image if selected
-        if($request->hasFile("image")) {
-            Storage::delete("public/images/".$student->image);
-            $student->image = $fileNameToStore;
-        }
-
+        image_update($request, $student);
         $student->save();
 
         return redirect("/students/$id")->with("success", "Profile Updated");
@@ -186,27 +153,24 @@ class StudentsController extends Controller
      */
     public function destroy($id)
     {
-        // Check if student exists
+        // Check if models exists
         $student = Student::findOrFail($id);
-
-        $this->authorize("destroy", $student);
-
-        // Check if user exists
         $user = User::findOrFail($id);
 
-        // Delete image if not default
-        if($student->image !== "noimage.jpg") {
-            Storage::delete("public/images/".$student->image);
-        }
+        // Authorize delete
+        $this->authorize("delete", $student);
 
-        // Log out and delete account
+        // Delete student
+        image_delete($student);
         $student->delete();
 
+        // If admin is deleting student
         if(auth()->user()->id !== $student->id) {
             $user->delete();
             return redirect("/admins")->with("success", "Student Deleted");
         }
 
+        // Self-deletion
         auth()->logout();
         $user->delete();
 
@@ -216,6 +180,9 @@ class StudentsController extends Controller
     public function selected() {
         // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);
+
+        // Authorize selected;
+        $this->authorize("selected", $student);
 
         $courses_ids = array_reverse($student->courses);
         $courses = array();
@@ -249,11 +216,9 @@ class StudentsController extends Controller
     }
 
     public function enroll($id) {
-        // Check if student exists
+        // Check if models exist
         $student = Student::findOrFail(auth()->user()->id);
-
-        // Check if course exists
-        Course::findOrFaiL($id)->get();
+        Course::findOrFaiL($id);
 
         $courses = $student->courses;
 
@@ -270,11 +235,9 @@ class StudentsController extends Controller
     }
 
     public function unenroll($id) {
-        // Check if student exists
+        // Check if models exist
         $student = Student::findOrFail(auth()->user()->id);
-
-        // Check if course exists
-        Course::findOrFaiL($id)->get();
+        Course::findOrFaiL($id);
 
         $courses = $student->courses;
 

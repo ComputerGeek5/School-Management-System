@@ -8,11 +8,11 @@ use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class AdminsController extends Controller
 {
     public function index(Request $request){
+        // Authorize viewAny
         $this->authorize("viewAny", Admin::class);
 
         // Get the search value from the request
@@ -35,7 +35,9 @@ class AdminsController extends Controller
      */
     public function create()
     {
+        // Authorize create
         $this->authorize("create", Admin::class);
+
         return view("admins.create");
     }
 
@@ -47,6 +49,7 @@ class AdminsController extends Controller
      */
     public function store(AdminStoreRequest $request)
     {
+        // Authorize create
         $this->authorize("create", Admin::class);
 
         // Validate Request
@@ -60,28 +63,12 @@ class AdminsController extends Controller
         $user->password = Hash::make($validated["password"]);
         $user->save();
 
-        // Handle image upload
-        if($request->hasFile("image")) {
-            // Get full name
-            $fileNameWithExt = $request->file("image")->getClientOriginalName();
-            // Get only name
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            // Get extension
-            $extension = $request->file("image")->getClientOriginalExtension();
-            // File name to store
-            $fileNameToStore = $fileName."_".time().".".$extension;
-            // Upload image
-            $request->file("image")->storeAs("public/images", $fileNameToStore);
-        } else {
-            $fileNameToStore = "noimage.jpg";
-        }
-
         // Create New Admin
         $admin = new Admin();
         $admin->id = $user->id;
         $admin->name = $validated["name"];
         $admin->email = $validated["email"];
-        $admin->image = $fileNameToStore;
+        image_create($request, $admin);
         $admin->save();
 
         return redirect("/admins")->with("success", "Admin Created");
@@ -95,6 +82,7 @@ class AdminsController extends Controller
      */
     public function show(Admin $admin)
     {
+        // Authorize view
         $this->authorize("view", $admin);
 
         return view("admins.show")->with("admin", $admin);
@@ -108,6 +96,7 @@ class AdminsController extends Controller
      */
     public function edit(Admin $admin)
     {
+        // Authorize update
         $this->authorize("update", $admin);
 
         return view("admins.edit")->with("admin", $admin);
@@ -122,44 +111,23 @@ class AdminsController extends Controller
      */
     public function update(AdminUpdateRequest $request, $id)
     {
-        // Check if admin exists
-        $admin = Admin::findOrFail($id)->get();
+        // Check if models exists
+        $admin = Admin::findOrFail($id);
+        $user = User::findOrFail($id);
 
+        // Authorize update
         $this->authorize("update", $admin);
 
         // Validate Request
         $validated = $request->validated();
 
-        // Check if user exists
-        $user = User::findOrFail($id)->get();
-
         // Update User
         $user->name = $validated["name"];
         $user->save();
 
-        // Handle image upload
-        if($request->hasFile("image")) {
-            // Get full name
-            $fileNameWithExt = $request->file("image")->getClientOriginalName();
-            // Get only name
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            // Get extension
-            $extension = $request->file("image")->getClientOriginalExtension();
-            // File name to store
-            $fileNameToStore = $fileName."_".time().".".$extension;
-            // Upload image
-            $request->file("image")->storeAs("public/images", $fileNameToStore);
-        }
-
         // Update admin
         $admin->name = $validated["name"];
-
-        // Update image if image selected
-        if($request->hasFile("image")) {
-            Storage::delete("public/images/".$admin->image);
-            $admin->image = $fileNameToStore;
-        }
-
+        image_update($request, $admin);
         $admin->save();
 
         return redirect("/admins/$id")->with("success", "Profile Updated");
@@ -173,20 +141,15 @@ class AdminsController extends Controller
      */
     public function destroy($id)
     {
-        // Check if user exists
-        $user = User::findOrFail($id)->get();
+        // Check if models exists
+        $user = User::findOrFail($id);
+        $admin = Admin::findOrFail($id);
 
-        // Check if admin exists
-        $admin = Admin::findOrFail($id)->get();
-
+        // Authorize delete
         $this->authorize("delete", $admin);
 
-        // Delete admin's image if default not selected
-        if($admin->image !== "noimage.jpg") {
-            Storage::delete("public/images/".$admin->image);
-        }
-
-        // Log out and delete account
+        // Delete account and logout
+        image_delete($admin);
         $admin->delete();
         auth()->logout();
         $user->delete();

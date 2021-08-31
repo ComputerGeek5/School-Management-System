@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 class TeachersController extends Controller
 {
     public function index(Request $request){
+        // Authorize viewAny
         $this->authorize("viewAny", Teacher::class);
 
         // Get the search value from the request
@@ -37,7 +38,9 @@ class TeachersController extends Controller
      */
     public function create()
     {
+        // Authorize create
         $this->authorize("create", Teacher::class);
+
         return view("teachers.create");
     }
 
@@ -49,6 +52,7 @@ class TeachersController extends Controller
      */
     public function store(TeacherStoreRequest $request)
     {
+        // Authorize create
         $this->authorize("create", Teacher::class);
 
         // Validate Request
@@ -62,22 +66,6 @@ class TeachersController extends Controller
         $user->password = Hash::make($validated["password"]);
         $user->save();
 
-        // Handle image upload
-        if($request->hasFile("image")) {
-            // Get full name
-            $fileNameWithExt = $request->file("image")->getClientOriginalName();
-            // Get only name
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            // Get extension
-            $extension = $request->file("image")->getClientOriginalExtension();
-            // File name to store
-            $fileNameToStore = $fileName."_".time().".".$extension;
-            // Upload image
-            $request->file("image")->storeAs("public/images", $fileNameToStore);
-        } else {
-            $fileNameToStore = "noimage.jpg";
-        }
-
         // Create New Teacher
         $teacher = new Teacher();
         $teacher->id = $user->id;
@@ -86,7 +74,7 @@ class TeachersController extends Controller
         $teacher->about = $validated["about"];
         $teacher->title = $validated["title"];
         $teacher->faculty = $validated["faculty"];
-        $teacher->image = $fileNameToStore;
+        image_create($request, $teacher);
         $teacher->save();
 
         return redirect("/admins")->with("success", "Teacher Created");
@@ -100,6 +88,7 @@ class TeachersController extends Controller
      */
     public function show(Teacher $teacher)
     {
+        // Authorize view
         $this->authorize("view", $teacher);
 
         return view("teachers.show")->with("teacher", $teacher);
@@ -113,6 +102,7 @@ class TeachersController extends Controller
      */
     public function edit(Teacher $teacher)
     {
+        // Authorize update
         $this->authorize("update", $teacher);
 
         return view("teachers.edit")->with("teacher", $teacher);
@@ -127,51 +117,28 @@ class TeachersController extends Controller
      */
     public function update(TeacherUpdateRequest $request, $id)
     {
-        // Check if teacher exists
-        $teacher = Teacher::findOrFail($id)->get();
+        // Check if models exist
+        $teacher = Teacher::findOrFail($id);
+        $user = User::findOrFail($id);
 
+        // Authorize update
         $this->authorize("update", $teacher);
 
         // Validate Request
         $validated = $request->validated();
 
-        // Find user
-        $user = User::findOrFail($id)->get();
-
         // Update user
         $user->name = $validated["name"];
-
         if(!empty($validated["password"])) {
             $user->password = Hash::make($validated["password"]);
         }
-
         $user->save();
-
-        // Handle image upload
-        if($request->hasFile("image")) {
-            // Get full name
-            $fileNameWithExt = $request->file("image")->getClientOriginalName();
-            // Get only name
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            // Get extension
-            $extension = $request->file("image")->getClientOriginalExtension();
-            // File name to store
-            $fileNameToStore = $fileName."_".time().".".$extension;
-            // Upload image
-            $request->file("image")->storeAs("public/images", $fileNameToStore);
-        }
 
         $teacher->name = $validated["name"];
         $teacher->title = $validated["title"];
         $teacher->faculty = $validated["faculty"];
         $teacher->about = $validated["about"];
-
-        // Update image if selected
-        if($request->hasFile("image")) {
-            Storage::delete("public/images/".$teacher->image);
-            $teacher->image = $fileNameToStore;
-        }
-
+        image_update($request, $teacher);
         $teacher->save();
 
         return redirect("/teachers/$id")->with("success", "Profile Updated");
@@ -185,12 +152,12 @@ class TeachersController extends Controller
      */
     public function destroy($id)
     {
-        // Check if teacher exists
-        $teacher = Teacher::findOrFail($id)->get();
+        // Check if models exist
+        $teacher = Teacher::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        $this->authorize("destroy", $teacher);
-
-        $user = User::findOrFail($id)->get();
+        // Authorize delete
+        $this->authorize("delete", $teacher);
 
         // Unenroll all students from this teacher's courses
         $students = Student::all();
@@ -210,17 +177,17 @@ class TeachersController extends Controller
             $course->delete();
         }
 
-        if($teacher->image !== "noimage.jpg") {
-            Storage::delete("public/images/".$teacher->image);
-        }
-
+        // Delete teacher
+        image_delete($teacher);
         $teacher->delete();
 
+        // If admin deletes teacher
         if(auth()->user()->id !== $teacher->id) {
             $user->delete();
             return redirect("/admins")->with("success", "Teacher Deleted");
         }
 
+        // Self-deletion
         auth()->logout();
         $user->delete();
 

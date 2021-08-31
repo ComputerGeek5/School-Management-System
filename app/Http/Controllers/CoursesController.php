@@ -12,6 +12,7 @@ use App\Models\Teacher;
 class CoursesController extends Controller
 {
     public function index(Request $request){
+        // Authorize viewAny
         $this->authorize("viewAny", Course::class);
 
         // Get the search value from the request
@@ -34,6 +35,7 @@ class CoursesController extends Controller
      */
     public function create()
     {
+        // Authorize Create
         $this->authorize("create", Course::class);
 
         return view("courses.create");
@@ -47,6 +49,7 @@ class CoursesController extends Controller
      */
     public function store(CourseStoreRequest $request)
     {
+        // Authorize create
         $this->authorize("create", Course::class);
 
         // Validate Request
@@ -73,6 +76,7 @@ class CoursesController extends Controller
      */
     public function show(Course $course)
     {
+        // Authorize view
         $this->authorize("view", $course);
 
         return view("courses.show")->with("course", $course);
@@ -86,6 +90,7 @@ class CoursesController extends Controller
      */
     public function edit(Course $course)
     {
+        // Authorize update
         $this->authorize("update", $course);
 
         return view("courses.edit")->with("course", $course);
@@ -100,6 +105,9 @@ class CoursesController extends Controller
      */
     public function update(CourseUpdateRequest $request, Course $course)
     {
+        // Authorize update
+        $this->authorize("update", $course);
+
         // Validate Request
         $validated = $request->validated();
 
@@ -122,7 +130,8 @@ class CoursesController extends Controller
      */
     public function destroy(Course $course)
     {
-        $this->authorize("destroy", $course);
+        // Authorize delete
+        $this->authorize("delete", $course);
 
         // Delete course
         $course->delete();
