@@ -170,6 +170,7 @@ class TeachersController extends Controller
                     $selected_id = array_search($course->id, $selected);
                     unset($selected[$selected_id]);
                     $student->courses = $selected;
+                    decrement_course($student, $course);
                     $student->save();
                 }
             }

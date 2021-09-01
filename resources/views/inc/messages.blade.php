@@ -1,3 +1,11 @@
+@if(isset($warnings) && !empty($warnings))
+    @foreach($warnings as $warning)
+        <div class="alert alert-warning">
+            {{ $warning }}
+        </div>
+    @endforeach
+@endif
+
 @if($errors->any())
     @foreach($errors->all() as $error)
         <div class="alert alert-danger">

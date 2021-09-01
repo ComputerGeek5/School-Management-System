@@ -190,8 +190,19 @@ class StudentsController extends Controller
     }
 
     public function take(Request $request) {
+        // Error
+        $warnings = [];
+
         // Check if student exists
         $student = Student::findOrFail(auth()->user()->id);
+
+        if($student->compulsory !== 3) {
+            $warnings[] = "You have to select 3 compulsory courses";
+        }
+
+        if($student->elective !== 2) {
+            $warnings[] = "You have to select 2 elective courses";
+        }
 
         // Get the search value from the request
         $search = $request->input('search');
@@ -205,14 +216,15 @@ class StudentsController extends Controller
 
         return view("students.take", [
             "courses" => $courses,
-            "courses_ids" => $courses_ids
+            "courses_ids" => $courses_ids,
+            "warnings" => $warnings,
         ]);
     }
 
     public function enroll($id) {
         // Check if models exist
         $student = Student::findOrFail(auth()->user()->id);
-        Course::findOrFaiL($id);
+        $course = Course::findOrFaiL($id);
 
         $courses = $student->courses;
 
@@ -223,6 +235,7 @@ class StudentsController extends Controller
 
         $courses[] = $id;
         $student->courses = $courses;
+        increment_course($student, $course);
         $student->save();
 
         return redirect("/students/take")->with("success", "Course Selected");
@@ -231,7 +244,7 @@ class StudentsController extends Controller
     public function unenroll($id) {
         // Check if models exist
         $student = Student::findOrFail(auth()->user()->id);
-        Course::findOrFaiL($id);
+        $course = Course::findOrFaiL($id);
 
         $courses = $student->courses;
 
@@ -244,6 +257,7 @@ class StudentsController extends Controller
 
         unset($courses[$id]);
         $student->courses = $courses;
+        decrement_course($student, $course);
         $student->save();
 
         return redirect("/students/selected")->with("success", "Course Unselected");

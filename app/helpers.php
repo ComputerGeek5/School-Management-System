@@ -65,3 +65,23 @@ if(!function_exists("update_password")) {
         }
     }
 }
+
+if(!function_exists("increment_course")) {
+    function increment_course(Model $student, Model $course) {
+        if($course->type === "Compulsory") {
+            $student->compulsory += 1;
+        } else {
+            $student->elective += 1;
+        }
+    }
+}
+
+if(!function_exists("decrement_course")) {
+    function decrement_course(Model $student, Model $course) {
+        if($course->type === "Compulsory") {
+            $student->compulsory -= 1;
+        } else {
+            $student->elective -= 1;
+        }
+    }
+}
