@@ -1,7 +1,6 @@
 @extends("layouts.app")
 
 @section("content")
-    <div>
         <div class="row">
             <div class="col-md-4" style="height: 75vh;">
                 <div class="row h-75 mb-3">
@@ -33,5 +32,16 @@
                 </div>
             </div>
         </div>
-    </div>
+        @if(Auth::user()->id !== $teacher->id)
+            <h4 class="mb-2">Courses: </h4>
+            <div class="card width-100">
+                <ul class="list-group list-group-flush">
+                    @foreach($teacher->courses as $course)
+                        <li class="list-group-item w-100 text-center">
+                            <a href="/teachers/courses/{{ $course->id }}" class="text-center">{{ $course->name }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 @endsection
