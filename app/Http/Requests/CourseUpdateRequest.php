@@ -28,7 +28,7 @@ class CourseUpdateRequest extends FormRequest
             "name" => "required",
             "ects" => "required",
             "type" => "required",
-            "description" => "required",
+            "description" => "nullable",
         ];
     }
 }
