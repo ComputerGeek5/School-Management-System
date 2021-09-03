@@ -43,6 +43,6 @@
         {{ $courses->links() }}
     </div>
     @else
-        <h1><em>No courses found</em></h1>
+        <h1><em>You don't have any courses</em></h1>
     @endif
 @endsection
