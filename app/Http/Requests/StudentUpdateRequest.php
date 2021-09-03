@@ -29,7 +29,7 @@ class StudentUpdateRequest extends FormRequest
             "graduation_year" => "required",
             "image" => "image|nullable|max:1999",
             "about" => "nullable",
-            "password" => "nullable",
+            "password" => "nullable|min:8",
         ];
     }
 }

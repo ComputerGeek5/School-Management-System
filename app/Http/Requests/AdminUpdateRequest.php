@@ -26,7 +26,7 @@ class AdminUpdateRequest extends FormRequest
         return [
             "name" => "required",
             "image" => "image|nullable|max:1999",
-            "password" => "nullable"
+            "password" => "nullable|min:8"
         ];
     }
 }
