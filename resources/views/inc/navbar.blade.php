@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark shadow-sm" style="background-color: #4169e1;">
+<nav class="navbar navbar-expand-md navbar-dark primary shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
             <i class="fas fa-school"></i>    {{ config('app.name', 'School Interactive System') }}
@@ -20,9 +20,6 @@
                         @include("inc.teachers")
                     @endif
                 @endif
-{{--                <li class="nav-item">--}}
-{{--                    <a class="nav-link" href="/about">About</a>--}}
-{{--                </li>--}}
             </ul>
 
             <!-- Right Side Of Navbar -->
