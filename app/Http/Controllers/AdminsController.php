@@ -22,6 +22,7 @@ class AdminsController extends Controller
         $users = User::query()
             ->where("id", "!=", auth()->user()->id)
             ->where('name', 'LIKE', "%{$search}%")
+            ->orderBy("name")
             ->simplePaginate(4);
 
         // Return the search view with the results

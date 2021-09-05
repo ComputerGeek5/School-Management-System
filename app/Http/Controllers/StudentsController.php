@@ -24,6 +24,7 @@ class StudentsController extends Controller
         $students = Student::query()
             ->where("id", "!=", auth()->user()->id)
             ->where('name', 'LIKE', "%{$search}%")
+            ->orderBy("name")
             ->simplePaginate(4);
 
         // Return the search view with the results
@@ -210,6 +211,7 @@ class StudentsController extends Controller
         // Search in the title and body columns from the users table
         $courses = Course::query()
             ->where('name', 'LIKE', "%{$search}%")
+            ->orderBy("name")
             ->simplePaginate(4);
 
         $courses_ids = $student->courses;

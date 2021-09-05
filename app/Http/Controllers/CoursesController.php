@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CourseStoreRequest;
 use App\Http\Requests\CourseUpdateRequest;
+use App\Models\Student;
 use App\Rules\Type;
 use Illuminate\Http\Request;
 use App\Models\Course;
@@ -22,6 +23,7 @@ class CoursesController extends Controller
         $courses = Course::query()
             ->where("teacher_id", "=", auth()->user()->id)
             ->where('name', 'LIKE', "%{$search}%")
+            ->latest()
             ->simplePaginate(4);
 
         // Return the search view with the results
@@ -119,7 +121,7 @@ class CoursesController extends Controller
         $course->description = $validated["description"];
         $course->save();
 
-        return redirect("/teachers/courses")->with("success", "Course Updated");
+        return redirect("/teachers/courses/".$course->id)->with("success", "Course Updated");
     }
 
     /**
@@ -133,7 +135,22 @@ class CoursesController extends Controller
         // Authorize delete
         $this->authorize("delete", $course);
 
-        // Delete course
+        // Unenroll all students from this teacher's courses
+        $students = Student::all();
+
+        foreach ($students as $student) {
+            $selected = $student->courses;
+
+            if (in_array($course->id, $selected)) {
+                $selected_id = array_search($course->id, $selected);
+                unset($selected[$selected_id]);
+                $student->courses = $selected;
+                decrement_course($student, $course);
+                $student->save();
+            }
+        }
+
+        // Delete Course
         $course->delete();
 
         return redirect("/teachers/courses")->with("success", "Course Deleted");
