@@ -42,7 +42,7 @@ if(!function_exists("image_update")) {
 
         // Update image if image selected
         if($request->hasFile("image")) {
-            Storage::delete("public/images/".$model->image);
+            image_delete($model);
             $model->image = $fileNameToStore;
         }
     }

@@ -25,9 +25,11 @@
             <h4><b>Tittle:</b> {{ $teacher->title }}</h4>
             <h4><b>Faculty:</b> {{ $teacher->faculty }}</h4>
             @if($teacher->about)
-                <h4><b>About me:</b></h4>
-                <div class="jumbotron jumbotron-fluid">
-                    <p class="lead ml-5">{{ $teacher->about }}</p>
+                <div class="card text-white primary w-100">
+                    <div class="card-body">
+                        <h1 class="card-title text-center"><em>About me</em></h1>
+                        <p class="card-text">{{ $teacher->about }}</p>
+                    </div>
                 </div>
             @endif
         </div>

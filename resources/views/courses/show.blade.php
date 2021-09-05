@@ -5,10 +5,10 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="col d-flex flex-column justify-content-center">
-                    <h4>Code: <em>{{ $course->code }}</em></h4>
-                    <h4>Name: <em>{{ $course->name }}</em></h4>
-                    <h4>Teacher: <em>{{ $course->teacher->name }}</em></h4>
-                    <h4>ECTS: <em>{{ $course->ects }}</em></h4>
+                    <h4><b>Code:</b> {{ $course->code }}</h4>
+                    <h4><b>Name:</b> {{ $course->name }}</h4>
+                    <h4><b>Teacher:</b> {{ $course->teacher->name }}</h4>
+                    <h4><b>ECTS:</b> {{ $course->ects }}</h4>
                 </div>
                 <div class="row d-flex flex-row">
                     @if($course->teacher_id === Auth::user()->id)
@@ -24,12 +24,14 @@
                 </div>
             </div>
             <div class="col-md-8">
-                <div class="card text-white bg-primary w-100">
-                    <div class="card-body">
-                        <h1 class="card-title">Description</h1>
-                        <p class="card-text">{{ $course->description }}</p>
+                @if($course->description)
+                    <div class="card text-white primary w-100">
+                        <div class="card-body">
+                            <h1 class="card-title text-center"><em>Description</em></h1>
+                            <p class="card-text">{{ $course->description }}</p>
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>
