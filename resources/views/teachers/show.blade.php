@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-4" style="height: 60vh;">
             <div class="row h-75 mb-3 justify-content-center">
-                <img src="/storage/images/{{ $teacher->image }}" class="w-75 h-100" alt="{{ $teacher->image }}" style="vertical-align: middle; border-radius: 50%;">
+                <img src="/storage/images/{{ $teacher->image }}" class="w-100 h-100" alt="{{ $teacher->image }}" style="vertical-align: middle; border-radius: 50%;">
             </div>
             <div class="row d-flex flex-row">
                 @if($teacher->id === Auth::user()->id)

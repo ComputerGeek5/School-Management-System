@@ -14,7 +14,7 @@ class AddCoursesToStudents extends Migration
     public function up()
     {
         Schema::table('students', function (Blueprint $table) {
-            $table->json("courses")->default("[]");
+            $table->json("courses");
         });
     }
 
